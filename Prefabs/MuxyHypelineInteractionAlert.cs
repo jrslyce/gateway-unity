@@ -11,8 +11,8 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
     public Vector2 Position = new Vector2(-48, -220);
     public Vector2 Size = new Vector2(480, 110);
     public bool LogReceivedActions = true;
-    public Color BackgroundColor = new Color(0.08f, 0.10f, 0.15f, 0.94f);
-    public Color AccentColor = new Color(0.21f, 0.84f, 0.75f, 1f);
+    public Color BackgroundColor = new Color(0.145098f, 0.145098f, 0.145098f, 0.94f);
+    public Color AccentColor = new Color(0.6f, 0.8f, 0.8f, 1f);
     [Header("Sounds (optional overrides)")]
     public bool PlaySounds = true;
     [Range(0f, 1f)] public float SoundVolume = 0.65f;
@@ -177,7 +177,7 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         message.alignment = TextAnchor.MiddleLeft;
         message.supportRichText = false;
         message.raycastTarget = false;
-message.horizontalOverflow = HorizontalWrapMode.Wrap;
+        message.horizontalOverflow = HorizontalWrapMode.Wrap;
         return new Alert { root = card, rect = rect, group = group };
     }
 

@@ -42,7 +42,7 @@ public class MuxyGatewayPolling : MonoBehaviour
             GameObject Ele = Elements.transform.GetChild(i).gameObject;
             Ele.SetActive(false);
             RawImage BG = Ele.transform.Find("BGPercent").gameObject.GetComponent<RawImage>();
-            BG.color = new Color(255, 255, 255);
+            BG.color = new Color(0.203922f, 0.203922f, 0.203922f);
         }
 
         int Count = Math.Min(Elements.transform.childCount, Config.Options.Count);
@@ -78,7 +78,7 @@ public class MuxyGatewayPolling : MonoBehaviour
             PauseTimer = WinnerPauseDuration;
             IsFinalUpdate = true;
             RawImage BG = Elements.transform.GetChild(Update.Winner).transform.Find("BGPercent").gameObject.GetComponent<RawImage>();
-            BG.color = new Color(0, 0, 255);
+            BG.color = new Color(0.6f, 0.8f, 0.8f);
         }
 
         PollConfiguration Config = GatewayManager.GetPollConfiguration();

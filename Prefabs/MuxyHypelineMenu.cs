@@ -217,12 +217,19 @@ public class MuxyHypelineMenu : MonoBehaviour
         return text;
     }
 
+    private static void AddTealOutline(Image image)
+    {
+        Outline outline = image.gameObject.AddComponent<Outline>();
+        outline.effectColor = new Color(0.6f, 0.8f, 0.8f);
+        outline.effectDistance = new Vector2(1, -1);
+    }
+
     private static Button MakeButton(string name, Transform parent, string label, Vector2 pos, Vector2 size, Color color, UnityAction action)
     {
         Image image = Box(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, size, color);
         Button button = image.gameObject.AddComponent<Button>();
         button.targetGraphic = image; button.onClick.AddListener(action);
-        Text("Label", image.transform, label, Vector2.zero, size - new Vector2(12, 6), 21, TextAnchor.MiddleCenter);
+        Text("Label", image.transform, label, Vector2.zero, size - new Vector2(12, 6), 21, TextAnchor.MiddleCenter).color = new Color(0.05098f, 0.05098f, 0.05098f);
         return button;
     }
 
@@ -233,24 +240,27 @@ public class MuxyHypelineMenu : MonoBehaviour
 
     private void BuildUI()
     {
-        Color surface = new Color(0.10f, 0.11f, 0.16f, 0.98f);
-        Color buttonColor = new Color(0.23f, 0.25f, 0.37f, 1);
+        Color surface = new Color(0.145098f, 0.145098f, 0.145098f);
+        Color buttonColor = new Color(0.6f, 0.8f, 0.8f);
         Image menu = Box("Stream Interactivity", transform, new Vector2(0, 1), new Vector2(0, 1), MenuButtonPosition + new Vector2(MenuButtonSize.x / 2, -MenuButtonSize.y / 2), MenuButtonSize, surface);
+        AddTealOutline(menu);
         menuButton = menu.gameObject.AddComponent<Button>(); menuButton.targetGraphic = menu; menuButton.onClick.AddListener(OpenPanel);
         fox = Box("Fox status", menu.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-112, 0), new Vector2(48, 48), DisconnectedColor);
         fox.sprite = MakeSprite(FoxArtwork); fox.preserveAspect = true; fox.raycastTarget = false;
-        Text("Title", menu.transform, "Stream Interactivity", new Vector2(20, 13), new Vector2(224, 27), 21, TextAnchor.MiddleLeft);
+        Text("Title", menu.transform, "Stream Interactivity", new Vector2(20, 13), new Vector2(224, 27), 21, TextAnchor.MiddleLeft).color = new Color(0.6f, 0.8f, 0.8f);
         menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(20, -14), new Vector2(224, 22), 16, TextAnchor.MiddleLeft);
 
         modal = Box("Hypeline Panel", transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0, 0, 0, 0.72f)).gameObject;
         Image card = Box("Card", modal.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, PanelSize, surface);
+        AddTealOutline(card);
         Image mark = Box("Hypeline wordmark", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), WordmarkPosition, WordmarkSize, Color.white);
         mark.sprite = MakeSprite(WordmarkArtwork); mark.preserveAspect = true; mark.raycastTarget = false;
         closeButton = MakeButton("Close", card.transform, "Close", CloseButtonPosition, CloseButtonSize, buttonColor, ClosePanel);
         Text("Description", card.transform, GameDescription, DescriptionPosition, DescriptionSize, 23, TextAnchor.MiddleLeft);
         Text("Platform", card.transform, ShowTikTokComingSoon ? "TWITCH    |    TikTok - Coming soon" : "TWITCH", PlatformPosition, PlatformSize, 20, TextAnchor.MiddleLeft);
         Text("Instructions", card.transform, "1. Install and activate the extension in your Twitch Creator Dashboard.\n2. Open Configure and get a code.\n3. Enter the code below within five minutes.", InstructionsPosition, InstructionsSize, 21, TextAnchor.UpperLeft);
-        Image inputBg = Box("Code", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), CodeInputPosition, CodeInputSize, new Color(0.17f, 0.18f, 0.24f));
+        Image inputBg = Box("Code", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), CodeInputPosition, CodeInputSize, new Color(0.05098f, 0.05098f, 0.05098f));
+        AddTealOutline(inputBg);
         code = inputBg.gameObject.AddComponent<InputField>();
         RectTransform viewport = Rect("Text Area", inputBg.transform, Vector2.zero, Vector2.one, Vector2.zero, new Vector2(-24, -8));
         viewport.gameObject.AddComponent<RectMask2D>();
