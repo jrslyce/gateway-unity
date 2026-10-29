@@ -3,6 +3,8 @@
 - Retain the package ID, assembly, existing public API and prefab GUIDs, saved-token key, and backend connection identifiers for existing integrations.
 - Preserve reflection-loaded Mono TLS configuration types in stripped player builds through an Editor-only linker callback.
 - Expand all 13 target-typed constructors for Unity 2020.3's C# 8 compiler.
+
+- Replace bundled TextMesh Pro UI with uGUI text and input components; remove the TextMesh Pro package dependency. Existing customized scene instances may require migration.
 - Preserve UTF-8 marshalling attributes without relying on the LPUTF8Str enum name missing from Unity 2020.3's .NET Standard 2.0 reference assemblies.
 - Declare TextMeshPro, uGUI, and image-conversion dependencies. Newer Editors resolve their built-in TMP compatibility package and uGUI implementation.
 - Add the explicit UnityEngine.UI assembly reference and isolate the UnityEditor import from standalone builds.

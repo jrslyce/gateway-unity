@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using MuxyGateway;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -159,25 +158,26 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         accentImage.color = AccentColor;
         accentImage.raycastTarget = false;
 
-        GameObject label = new GameObject("Message", typeof(RectTransform), typeof(TextMeshProUGUI));
+        GameObject label = new GameObject("Message", typeof(RectTransform), typeof(Text));
         RectTransform labelRect = label.GetComponent<RectTransform>();
         labelRect.SetParent(rect, false);
         labelRect.anchorMin = Vector2.zero;
         labelRect.anchorMax = Vector2.one;
         labelRect.offsetMin = new Vector2(28, 12);
         labelRect.offsetMax = new Vector2(-20, -12);
-        TMP_Text message = label.GetComponent<TMP_Text>();
+        Text message = label.GetComponent<Text>();
+#if UNITY_2022_2_OR_NEWER
+        message.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+#else
+        message.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+#endif
         message.text = text;
         message.fontSize = 27;
         message.color = Color.white;
-        message.alignment = TextAlignmentOptions.MidlineLeft;
-        message.richText = false;
+        message.alignment = TextAnchor.MiddleLeft;
+        message.supportRichText = false;
         message.raycastTarget = false;
-#if UNITY_6000_0_OR_NEWER
-        message.textWrappingMode = TextWrappingModes.Normal;
-#else
-        message.enableWordWrapping = true;
-#endif
+message.horizontalOverflow = HorizontalWrapMode.Wrap;
         return new Alert { root = card, rect = rect, group = group };
     }
 

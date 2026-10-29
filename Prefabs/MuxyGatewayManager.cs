@@ -12,6 +12,10 @@ public class MuxyGatewayManager : MonoBehaviour
     public String GameID = "";
 
     [SerializeField] private GameMetadata GameMetadata = new GameMetadata();
+    [Tooltip("Optional logo texture. It is encoded as a PNG data URI when game metadata is published.")]
+    public Texture2D GameLogo;
+    [Tooltip("Remember the broadcaster session on this device using Unity PlayerPrefs, which is not encrypted.")]
+    public bool RememberSession = true;
     [SerializeField] private List<GameAction> GameActions = new List<GameAction>();
     [SerializeField] private List<GameText> GameTexts = new List<GameText>();
     [SerializeField] private PollConfiguration PollConfiguration = new PollConfiguration();
@@ -21,6 +25,7 @@ public class MuxyGatewayManager : MonoBehaviour
     public MuxyGatewayAuthenticationEvent OnAuthentication = new MuxyGatewayAuthenticationEvent();
     public MuxyGatewayGameActionUsedEvent OnAnyGameActionUsed = new MuxyGatewayGameActionUsedEvent();
     public MuxyGatewayBitsUsedEvent OnBitsUsed = new MuxyGatewayBitsUsedEvent();
+    public GatewayTransportStateEvent OnTransportStateChanged = new GatewayTransportStateEvent();
 
     [Serializable]
     public class MuxyGatewayAuthenticationEvent : UnityEvent<AuthenticationResponse> { }
@@ -28,6 +33,8 @@ public class MuxyGatewayManager : MonoBehaviour
     public class MuxyGatewayBitsUsedEvent : UnityEvent<BitsUsed> { }
     [Serializable]
     public class MuxyGatewayPollUpdate : UnityEvent<PollUpdate> { }
+    [Serializable]
+    public class GatewayTransportStateEvent : UnityEvent<GatewayTransportState> { }
 
 
     // Private //
@@ -40,6 +47,7 @@ public class MuxyGatewayManager : MonoBehaviour
     private SDK.OnBitsUsedDelegate BitsCB;
 
     private bool DidOpenAndRun = false;
+    private GatewayTransportState lastTransportState = GatewayTransportState.Disconnected;
 
     private void SetupCallbacks()
     {
@@ -55,26 +63,29 @@ public class MuxyGatewayManager : MonoBehaviour
 
         AuthCB = (Response) =>
         {
-            OnAuthentication.Invoke(Response);
-
             if (Response.HasError)
             {
                 PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, "");
+                OnAuthentication.Invoke(Response);
                 return;
             }
 
-            PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, Response.RefreshToken);
+            if (RememberSession) PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, Response.RefreshToken);
+            else ClearSavedSession();
 
             SDK.OnGameActionUsed(ActionCB);
             SDK.OnBitsUsed(BitsCB);
             SDK.SetGameActions(GameActions.ToArray());
-            SDK.SetGameMetadata(GameMetadata);
+            SDK.SetGameMetadata(BuildGameMetadata());
+            SDK.SetGameTexts(GameTexts.ToArray());
+            OnAuthentication.Invoke(Response);
         };
 
     }
 
     private void CheckForRefreshToken()
     {
+        if (!RememberSession) return;
         String RefreshToken = PlayerPrefs.GetString(PLAYER_PREFS_REFRESH_TOKEN, "");
         if (RefreshToken != "")
         {
@@ -122,6 +133,14 @@ public class MuxyGatewayManager : MonoBehaviour
 
     private void Update()
     {
+        if (SDK == null) return;
+        GatewayTransportState state = SDK.TransportState;
+        if (state != lastTransportState)
+        {
+            lastTransportState = state;
+            OnTransportStateChanged.Invoke(state);
+            if (SDK == null) return;
+        }
         if (SDK.TransportState == GatewayTransportState.Error) DidOpenAndRun = false;
         SDK.Update();
     }
@@ -134,7 +153,13 @@ public class MuxyGatewayManager : MonoBehaviour
 
     public bool IsAuthenticated()
     {
-        return SDK.IsAuthenticated;
+        return SDK != null && SDK.IsAuthenticated;
+    }
+
+    /// <summary>Remove the locally stored session without disconnecting the current session.</summary>
+    public void ClearSavedSession()
+    {
+        PlayerPrefs.DeleteKey(PLAYER_PREFS_REFRESH_TOKEN);
     }
 
     public GatewayTransportState TransportState
@@ -144,10 +169,8 @@ public class MuxyGatewayManager : MonoBehaviour
 
     public void Deauthenticate()
     {
-        PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, "");
-        SDK.Deauthenticate();
-        DidOpenAndRun = false;
-        SDK = new SDK(GameID);
+        ClearSavedSession();
+        if (SDK != null) SDK.Deauthenticate();
     }
 
     public void AddGameText(GameText Text)
@@ -234,7 +257,33 @@ public class MuxyGatewayManager : MonoBehaviour
     public void SetGameMetadata(GameMetadata Metadata)
     {
         GameMetadata = Metadata;
-        SDK.SetGameMetadata(Metadata);
+        SDK.SetGameMetadata(BuildGameMetadata());
+    }
+
+    private GameMetadata BuildGameMetadata()
+    {
+        GameMetadata metadata = new GameMetadata
+        {
+            Name = GameMetadata.Name,
+            Logo = GameMetadata.Logo,
+            Theme = GameMetadata.Theme
+        };
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (GameLogo != null)
+        {
+            try
+            {
+                metadata.Logo = SDK.ConvertTextureToBase64(GameLogo);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError("Muxy Gateway logo could not be encoded. Enable Read/Write and use RGB24, RGBA32, or ARGB32 on the texture. " + exception.Message);
+            }
+        }
+#endif
+
+        return metadata;
     }
 
     public GameMetadata GetGameMetadata()

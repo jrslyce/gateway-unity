@@ -1,6 +1,6 @@
 # Muxy Hypeline creator menu
 
-Add `Prefabs/MuxyHypelineMenu.prefab` to the main-menu scene. It creates a Stream Interactivity button and a creator setup panel at runtime. The prefab does not create an EventSystem; keep exactly one in your scene, configured for your project's active input system. Import TextMeshPro Essential Resources when prompted.
+Add `Prefabs/MuxyHypelineMenu.prefab` to the main-menu scene. It creates a Stream Interactivity button and a creator setup panel at runtime. The prefab does not create an EventSystem; keep exactly one in your scene, configured for your project's active input system.
 
 1. Add the existing `MuxyGatewayManager` prefab and set its Game ID to the exact ID linked in the Twitch extension configuration.
 2. Add `MuxyHypelineMenu` to the scene, optionally under an existing Canvas, and assign the scene's manager to **Gateway Manager** before Play mode. If there is no parent Canvas, the component creates an overlay Canvas.

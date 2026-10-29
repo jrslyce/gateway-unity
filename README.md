@@ -52,22 +52,12 @@ The package manifest requests its dependencies automatically:
 
 | Dependency | Requested version | Purpose |
 |---|---|---|
-| `com.unity.textmeshpro` | `3.0.6` | Authentication, notification, and polling UI |
 | `com.unity.ugui` | `1.0.0` | Unity UI components |
 | `com.unity.modules.imageconversion` | `1.0.0` | PNG encoding for game logos |
 
-On Unity 2023.2 and newer, TextMeshPro is included in uGUI. These Editors supply
-a built-in TextMeshPro compatibility package and their own uGUI version; let
-Package Manager resolve those built-ins. Do not manually downgrade uGUI or copy
-an older TextMeshPro implementation into the project. Check the resolved versions
-in the project's `Packages/packages-lock.json`.
+The bundled UI uses Unity's uGUI Text and InputField components and does not require TextMesh Pro or TMP Essential Resources. Existing scene instances and customized prefab variants that still contain TMP components need to be migrated separately; replacing the package prefabs does not rewrite those assets. The replacement font and text rendering may differ from earlier versions.
 
-The SDK and its bundled prefab scripts still share the **`Muxy.Gateway`** assembly,
-so these UI dependencies apply to both prefab and code integrations. Consumer
-scripts under a custom `.asmdef` must reference `Muxy.Gateway`. Public type names,
-assembly ownership, and existing prefab/script GUIDs are preserved by this update.
-Import TMP Essential Resources through **Window > TextMeshPro** if your UI project
-does not already contain them.
+The SDK and its bundled prefab scripts share the **`Muxy.Gateway`** assembly. Consumer scripts under a custom `.asmdef` must reference `Muxy.Gateway`.
 
 An Editor-only build callback preserves the reflection-loaded configuration types
 used by Mono TLS, which can otherwise be removed by High managed stripping.

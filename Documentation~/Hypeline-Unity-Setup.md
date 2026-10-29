@@ -7,7 +7,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 1. In Unity, open **Window → Package Manager**.
 2. Add the Muxy Unity package. To test the local development copy, use **Add package from disk** and select its `package.json`. For a distributed package, use the package URL or release supplied by Muxy.
 3. Wait for package import and compilation. In the Project window, open **Packages → Muxy Hypeline → Prefabs**.
-4. Import **TMP Essential Resources** if Unity prompts you. The scene must contain one EventSystem, configured for the project's active input system.
+4. The scene must contain one EventSystem, configured for the project's active input system. The included Hypeline prefabs use Unity UI and do not require TextMesh Pro.
 
 ![Unity 2020 package prefab folder](hypeline-images/unity-2020-prefabs.png)
 
@@ -18,7 +18,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 3. Drag **MuxyHypelineMenu** into the Hierarchy. Select it, then drag the scene's manager into its **Gateway Manager** field.
 4. Enter a **Game Description** that tells creators what viewers can do in your game. The TikTok coming-soon label and the artwork and colors are configurable in the Inspector.
 5. Set **Menu Button Position** to fit your menu. In the tested LEGO scene the default overlapped the existing top-left HUD; changing Y from `-24` to `-170` made the button visible. This value is an example, not a universal setting.
-6. The UI is created when the game runs, so the button and panel do not appear as editable children in the prefab before Play mode. The root may be placed under an existing Canvas; if it has no Canvas parent, the component creates an overlay Canvas at runtime.
+6. Expand the menu prefab in the Hierarchy to edit **Stream Interactivity** and **Hypeline Panel → Card**. Place the menu under a Canvas to see it in the Scene view, and use the Rect Tool to position or resize its children. Toggle the panel GameObject off in edit mode to work on the launcher; the script opens and closes the panel at runtime. Existing older scene instances with no serialized hierarchy continue to build their UI at runtime; add the new prefab to use the editable hierarchy.
 
 ![Manager assigned in the Hypeline inspector](hypeline-images/unity-2020-wiring.png)
 
@@ -51,7 +51,7 @@ In the LEGO test scene, **Test Neutral Alert** and **Test Hinder Alert** are zer
 
 ## Unity 6
 
-The package uses Unity's resolved uGUI/TextMeshPro packages. Do not manually downgrade uGUI or copy an old TextMeshPro package into the project. The component contains a Unity 6-specific TextMeshPro wrapping setting; older SDK copies with `enableWordWrapping` can fail to compile in Unity 6. Use the updated package.
+The package uses Unity's resolved uGUI package for its built-in text and input components. TextMesh Pro and TMP Essential Resources are not required by these prefabs.
 
 In the tested Unity 6.6 demo, the manager and demo controller were already in the scene:
 

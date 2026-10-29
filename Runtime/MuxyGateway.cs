@@ -175,12 +175,25 @@ namespace MuxyGateway
 
         public void RunInSandbox()
         {
-            Transport.OpenAndRunInSandbox(this);
+            ObserveTransportStart(Transport.OpenAndRunInSandbox(this));
         }
 
         public void RunInProduction()
         {
-            Transport.OpenAndRunInProduction(this);
+            ObserveTransportStart(Transport.OpenAndRunInProduction(this));
+        }
+
+        private async void ObserveTransportStart(Task start)
+        {
+            try { await start; }
+            catch (Exception exception)
+            {
+#if UNITY_EDITOR || UNITY_STANDALONE
+                Debug.LogWarning("Gateway transport could not start (" + exception.GetType().Name + ").");
+#else
+                Console.Error.WriteLine("Gateway transport could not start (" + exception.GetType().Name + ").");
+#endif
+            }
         }
 
         private class InvokeOnDebugMessageParameters

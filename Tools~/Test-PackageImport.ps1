@@ -103,10 +103,23 @@ public static class GatewayPackageImportValidation
                     throw new InvalidOperationException("Public type moved assembly: " + type.FullName);
             }
 
-            PackageInfo tmpProvider = PackageInfo.FindForAssembly(typeof(TMPro.TMP_Text).Assembly);
             PackageInfo uiProvider = PackageInfo.FindForAssembly(typeof(UnityEngine.UI.Graphic).Assembly);
-            if (tmpProvider == null || uiProvider == null)
+            if (uiProvider == null)
                 throw new InvalidOperationException("UI package providers were not resolved.");
+
+            foreach (string prefabName in new[] { "MuxyGatewayAuthenticateUI", "MuxyGatewayPolling", "MuxyGatewayNotifications", "MuxyHypelineMenu", "MuxyHypelineInteractionAlert" })
+            {
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.muxy.gateway/Prefabs/" + prefabName + ".prefab");
+                if (prefab == null) throw new InvalidOperationException("Missing prefab: " + prefabName);
+                foreach (Transform node in prefab.GetComponentsInChildren<Transform>(true))
+                    if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(node.gameObject) != 0)
+                        throw new InvalidOperationException("Missing prefab component: " + prefabName + "/" + node.name);
+                foreach (UnityEngine.UI.Text text in prefab.GetComponentsInChildren<UnityEngine.UI.Text>(true))
+                    if (text.font == null) throw new InvalidOperationException("Missing text font: " + prefabName + "/" + text.name);
+                foreach (UnityEngine.UI.InputField input in prefab.GetComponentsInChildren<UnityEngine.UI.InputField>(true))
+                    if (input.textComponent == null || input.placeholder == null)
+                        throw new InvalidOperationException("Missing input references: " + prefabName + "/" + input.name);
+            }
 
             ValidateUtf8Marshalling();
             Type linker = Type.GetType("MuxyGateway.Editor.GatewayLinkerProcessor, Muxy.Gateway.Editor");
@@ -119,7 +132,6 @@ public static class GatewayPackageImportValidation
                 "unity=" + Application.unityVersion,
                 "sdkAssembly=Muxy.Gateway",
                 "consumerAssembly=" + typeof(GatewayPackageConsumer).Assembly.GetName().Name,
-                "tmpProvider=" + tmpProvider.name + "@" + tmpProvider.version,
                 "uiProvider=" + uiProvider.name + "@" + uiProvider.version,
                 "utf8StructMarshalling=passed",
                 "linkerProcessor=registered",

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using TMPro;
+
 using MuxyGateway;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,8 +15,8 @@ public class MuxyGatewayPolling : MonoBehaviour
 
     private GameObject Elements;
     private GameObject Canvas;
-    private TMP_Text PromptText;
-    private TMP_Text TimerText;
+    private Text PromptText;
+    private Text TimerText;
 
     private bool IsActive = false;
     private bool IsFinalUpdate = false;
@@ -50,13 +50,13 @@ public class MuxyGatewayPolling : MonoBehaviour
         {
             GameObject Ele = Elements.transform.GetChild(i).gameObject;
             Ele.SetActive(true);
-            TMP_Text OptionText = Elements.transform.GetChild(i).transform.Find("Option").gameObject.GetComponent<TMP_Text>();
-            OptionText.SetText(Config.Options[i]);
+            Text OptionText = Elements.transform.GetChild(i).transform.Find("Option").gameObject.GetComponent<Text>();
+            OptionText.text = Config.Options[i];
         }
         
         Canvas.SetActive(true);
         IsActive = true;
-        PromptText.SetText(Config.Prompt);
+        PromptText.text = Config.Prompt;
     }
 
     public void HidePrompt()
@@ -85,8 +85,8 @@ public class MuxyGatewayPolling : MonoBehaviour
         int Count = Math.Min(Elements.transform.childCount, Config.Options.Count);
         for (int i = 0; i < Count; i++)
         {
-            TMP_Text PercentText = Elements.transform.GetChild(i).transform.Find("Percent").gameObject.GetComponent<TMP_Text>();
-            PercentText.SetText(Update.Results[i].ToString());
+            Text PercentText = Elements.transform.GetChild(i).transform.Find("Percent").gameObject.GetComponent<Text>();
+            PercentText.text = Update.Results[i].ToString();
         }
         
     }
@@ -95,8 +95,8 @@ public class MuxyGatewayPolling : MonoBehaviour
     {
         Elements = this.transform.Find("Canvas/Elements").gameObject; 
         Canvas = this.transform.Find("Canvas").gameObject;
-        PromptText = this.transform.Find("Canvas/Prompt").GetComponent<TMP_Text>();
-        TimerText = this.transform.Find("Canvas/Timer").GetComponent<TMP_Text>();
+        PromptText = this.transform.Find("Canvas/Prompt").GetComponent<Text>();
+        TimerText = this.transform.Find("Canvas/Timer").GetComponent<Text>();
     }
 
     void Update()
@@ -114,7 +114,7 @@ public class MuxyGatewayPolling : MonoBehaviour
 
         PollConfiguration Config = GatewayManager.GetPollConfiguration();
 
-        TimerText.SetText("Time Remaining: " + string.Format("{0:HH:mm:ss}", Timer));
+        TimerText.text = "Time Remaining: " + string.Format("{0:HH:mm:ss}", Timer);
         Timer -= Time.deltaTime; 
 
     }

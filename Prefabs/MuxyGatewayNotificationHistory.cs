@@ -1,4 +1,4 @@
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -96,21 +96,21 @@ public class MuxyGatewayNotificationHistory : MonoBehaviour
     {
         for (int i = Elements.transform.childCount; i-- > 0;)
         {
-            TMP_Text TmpTextRight = Elements.transform.GetChild(i).transform.Find("ActionText").gameObject.GetComponent<TMP_Text>();
+            Text TmpTextRight = Elements.transform.GetChild(i).transform.Find("ActionText").gameObject.GetComponent<Text>();
             RawImage TmpImgRight = Elements.transform.GetChild(i).transform.Find("StatusIcon").gameObject.GetComponent<RawImage>();
 
             if (i != 0)
             {
-                TMP_Text TmpTextLeft = Elements.transform.GetChild(i-1).transform.Find("ActionText").gameObject.GetComponent<TMP_Text>();
+                Text TmpTextLeft = Elements.transform.GetChild(i-1).transform.Find("ActionText").gameObject.GetComponent<Text>();
                 RawImage TmpImgLeft = Elements.transform.GetChild(i-1).transform.Find("StatusIcon").gameObject.GetComponent<RawImage>();
-                TmpTextRight.SetText(TmpTextLeft.text);
+                TmpTextRight.text = TmpTextLeft.text;
                 TmpTextRight.color = new Color(TmpTextLeft.color.r, TmpTextLeft.color.g, TmpTextLeft.color.b, TmpTextRight.color.a);
                 TmpImgRight.texture = TmpImgLeft.texture;
                 TmpImgRight.color = new Color(255, 255, 255, TmpTextRight.color.a);
             }
             else
             {
-                TmpTextRight.SetText("");
+                TmpTextRight.text = "";
                 TmpTextRight.color = Color.white;
             }
         }
@@ -120,8 +120,8 @@ public class MuxyGatewayNotificationHistory : MonoBehaviour
     {
         for (int i = 0; i < Elements.transform.childCount; i++)
         {
-            TMP_Text TmpText = Elements.transform.GetChild(i).gameObject.GetComponent<TMP_Text>();
-            TmpText.SetText("");
+            Text TmpText = Elements.transform.GetChild(i).transform.Find("ActionText").GetComponent<Text>();
+            TmpText.text = "";
         }
 
     }
@@ -130,8 +130,8 @@ public class MuxyGatewayNotificationHistory : MonoBehaviour
     {
         this.ClearTimer = ClearTime;
         ShiftEntries();
-        TMP_Text NewText = Elements.transform.GetChild(0).gameObject.GetComponent<TMP_Text>();
-        NewText.SetText(ActionDesc);
+        Text NewText = Elements.transform.GetChild(0).transform.Find("ActionText").GetComponent<Text>();
+        NewText.text = ActionDesc;
         NewText.color = new Color(TextColor.r, TextColor.g, TextColor.b, NewText.color.a);
         Canvas.SetActive(true);
     }

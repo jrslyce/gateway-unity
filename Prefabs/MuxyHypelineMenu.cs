@@ -1,5 +1,4 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -21,14 +20,39 @@ public class MuxyHypelineMenu : MonoBehaviour
     public Color ErrorColor = new Color(1f, 0.36f, 0.34f);
     public Vector2 MenuButtonPosition = new Vector2(24, -24);
     public Vector2 MenuButtonSize = new Vector2(300, 76);
+
+    [Header("Panel Layout")]
+    public Vector2 PanelSize = new Vector2(760, 760);
+    public Vector2 WordmarkPosition = new Vector2(-190, 320);
+    public Vector2 WordmarkSize = new Vector2(310, 83);
+    public Vector2 CloseButtonPosition = new Vector2(315, 320);
+    public Vector2 CloseButtonSize = new Vector2(100, 44);
+    public Vector2 DescriptionPosition = new Vector2(0, 245);
+    public Vector2 DescriptionSize = new Vector2(660, 60);
+    public Vector2 PlatformPosition = new Vector2(0, 183);
+    public Vector2 PlatformSize = new Vector2(660, 38);
+    public Vector2 InstructionsPosition = new Vector2(0, 95);
+    public Vector2 InstructionsSize = new Vector2(660, 130);
+    public Vector2 CodeInputPosition = new Vector2(-140, -12);
+    public Vector2 CodeInputSize = new Vector2(360, 55);
+    public Vector2 ConnectButtonPosition = new Vector2(208, -12);
+    public Vector2 ConnectButtonSize = new Vector2(220, 55);
+    public Vector2 StatusPosition = new Vector2(0, -85);
+    public Vector2 StatusSize = new Vector2(660, 30);
+    public Vector2 MessagePosition = new Vector2(0, -140);
+    public Vector2 MessageSize = new Vector2(660, 65);
+    public Vector2 SetupButtonPosition = new Vector2(-184, -230);
+    public Vector2 SetupButtonSize = new Vector2(290, 55);
+    public Vector2 DisconnectButtonPosition = new Vector2(184, -230);
+    public Vector2 DisconnectButtonSize = new Vector2(290, 55);
     public UnityEvent OnPanelOpened = new UnityEvent();
     public UnityEvent OnPanelClosed = new UnityEvent();
 
-    private Image fox;
-    private TMP_Text menuStatus, panelStatus, message;
-    private TMP_InputField code;
-    private GameObject modal;
-    private Button menuButton, connectButton, disconnectButton;
+    [SerializeField] private Image fox;
+    [SerializeField] private UnityEngine.UI.Text menuStatus, panelStatus, message;
+    [SerializeField] private InputField code;
+    [SerializeField] private GameObject modal;
+    [SerializeField] private Button menuButton, connectButton, disconnectButton, closeButton, setupButton;
     private bool requested, authError;
     private string lastStatus;
     private GameObject previousSelection;
@@ -44,7 +68,23 @@ public class MuxyHypelineMenu : MonoBehaviour
             scaler.referenceResolution = new Vector2(1920, 1080);
             gameObject.AddComponent<GraphicRaycaster>();
         }
-        BuildUI();
+        if (modal == null) BuildUI();
+        else
+        {
+            menuButton.onClick.AddListener(OpenPanel);
+            closeButton.onClick.AddListener(ClosePanel);
+            connectButton.onClick.AddListener(Connect);
+            setupButton.onClick.AddListener(OpenTwitchSetup);
+            disconnectButton.onClick.AddListener(Disconnect);
+            fox.sprite = MakeSprite(FoxArtwork);
+            var mark = modal.transform.Find("Card/Hypeline wordmark");
+            if (mark != null) mark.GetComponent<Image>().sprite = MakeSprite(WordmarkArtwork);
+            var description = modal.transform.Find("Card/Description");
+            if (description != null) description.GetComponent<UnityEngine.UI.Text>().text = GameDescription;
+            var platform = modal.transform.Find("Card/Platform");
+            if (platform != null) platform.GetComponent<UnityEngine.UI.Text>().text = ShowTikTokComingSoon ? "TWITCH    |    TikTok - Coming soon" : "TWITCH";
+        }
+        modal.SetActive(false);
     }
 
     private void OnEnable()
@@ -132,6 +172,18 @@ public class MuxyHypelineMenu : MonoBehaviour
         message.text = "Disconnected. Enter a new Twitch code to connect again.";
     }
 
+    private void OpenTwitchSetup() { Application.OpenURL(TwitchSetupUrl); }
+
+#if UNITY_EDITOR
+    // Used by the package's prefab-generation tool; the resulting hierarchy is serialized.
+    public void BuildEditableHierarchy()
+    {
+        if (modal != null || transform.childCount != 0) throw new InvalidOperationException("Menu already has children.");
+        BuildUI();
+        modal.SetActive(true);
+    }
+#endif
+
     private static RectTransform Rect(string name, Transform parent, Vector2 anchorMin, Vector2 anchorMax, Vector2 position, Vector2 size)
     {
         GameObject go = new GameObject(name, typeof(RectTransform));
@@ -149,15 +201,18 @@ public class MuxyHypelineMenu : MonoBehaviour
         return image;
     }
 
-    private static TMP_Text Text(string name, Transform parent, string value, Vector2 pos, Vector2 size, float fontSize, TextAlignmentOptions alignment)
-    {
-        TMP_Text text = Rect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, size).gameObject.AddComponent<TextMeshProUGUI>();
-        text.text = value; text.fontSize = fontSize; text.alignment = alignment; text.color = Color.white;
-#if UNITY_6000_0_OR_NEWER
-        text.textWrappingMode = TextWrappingModes.Normal;
+#if UNITY_2022_2_OR_NEWER
+    private const string BuiltinFontName = "LegacyRuntime.ttf";
 #else
-        text.enableWordWrapping = true;
+    private const string BuiltinFontName = "Arial.ttf";
 #endif
+
+    private static UnityEngine.UI.Text Text(string name, Transform parent, string value, Vector2 pos, Vector2 size, float fontSize, TextAnchor alignment)
+    {
+        UnityEngine.UI.Text text = Rect(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, size).gameObject.AddComponent<UnityEngine.UI.Text>();
+        text.text = value; text.font = Resources.GetBuiltinResource<Font>(BuiltinFontName); text.fontSize = Mathf.RoundToInt(fontSize); text.alignment = alignment; text.color = Color.white;
+        text.horizontalOverflow = HorizontalWrapMode.Wrap;
+        text.verticalOverflow = VerticalWrapMode.Truncate;
         text.raycastTarget = false;
         return text;
     }
@@ -167,7 +222,7 @@ public class MuxyHypelineMenu : MonoBehaviour
         Image image = Box(name, parent, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), pos, size, color);
         Button button = image.gameObject.AddComponent<Button>();
         button.targetGraphic = image; button.onClick.AddListener(action);
-        Text("Label", image.transform, label, Vector2.zero, size - new Vector2(12, 6), 21, TextAlignmentOptions.Center);
+        Text("Label", image.transform, label, Vector2.zero, size - new Vector2(12, 6), 21, TextAnchor.MiddleCenter);
         return button;
     }
 
@@ -184,31 +239,31 @@ public class MuxyHypelineMenu : MonoBehaviour
         menuButton = menu.gameObject.AddComponent<Button>(); menuButton.targetGraphic = menu; menuButton.onClick.AddListener(OpenPanel);
         fox = Box("Fox status", menu.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-112, 0), new Vector2(48, 48), DisconnectedColor);
         fox.sprite = MakeSprite(FoxArtwork); fox.preserveAspect = true; fox.raycastTarget = false;
-        Text("Title", menu.transform, "Stream Interactivity", new Vector2(20, 13), new Vector2(224, 27), 21, TextAlignmentOptions.Left);
-        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(20, -14), new Vector2(224, 22), 16, TextAlignmentOptions.Left);
+        Text("Title", menu.transform, "Stream Interactivity", new Vector2(20, 13), new Vector2(224, 27), 21, TextAnchor.MiddleLeft);
+        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(20, -14), new Vector2(224, 22), 16, TextAnchor.MiddleLeft);
 
         modal = Box("Hypeline Panel", transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0, 0, 0, 0.72f)).gameObject;
-        Image card = Box("Card", modal.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(760, 760), surface);
-        Image mark = Box("Hypeline wordmark", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-190, 320), new Vector2(310, 83), Color.white);
+        Image card = Box("Card", modal.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, PanelSize, surface);
+        Image mark = Box("Hypeline wordmark", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), WordmarkPosition, WordmarkSize, Color.white);
         mark.sprite = MakeSprite(WordmarkArtwork); mark.preserveAspect = true; mark.raycastTarget = false;
-        MakeButton("Close", card.transform, "Close", new Vector2(315, 320), new Vector2(100, 44), buttonColor, ClosePanel);
-        Text("Description", card.transform, GameDescription, new Vector2(0, 245), new Vector2(660, 60), 23, TextAlignmentOptions.Left);
-        Text("Platform", card.transform, ShowTikTokComingSoon ? "TWITCH    |    TikTok - Coming soon" : "TWITCH", new Vector2(0, 183), new Vector2(660, 38), 20, TextAlignmentOptions.Left);
-        Text("Instructions", card.transform, "1. Install and activate the extension in your Twitch Creator Dashboard.\n2. Open Configure and get a code.\n3. Enter the code below within five minutes.", new Vector2(0, 95), new Vector2(660, 130), 21, TextAlignmentOptions.TopLeft);
-        Image inputBg = Box("Code", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-140, -12), new Vector2(360, 55), new Color(0.17f, 0.18f, 0.24f));
-        code = inputBg.gameObject.AddComponent<TMP_InputField>();
+        closeButton = MakeButton("Close", card.transform, "Close", CloseButtonPosition, CloseButtonSize, buttonColor, ClosePanel);
+        Text("Description", card.transform, GameDescription, DescriptionPosition, DescriptionSize, 23, TextAnchor.MiddleLeft);
+        Text("Platform", card.transform, ShowTikTokComingSoon ? "TWITCH    |    TikTok - Coming soon" : "TWITCH", PlatformPosition, PlatformSize, 20, TextAnchor.MiddleLeft);
+        Text("Instructions", card.transform, "1. Install and activate the extension in your Twitch Creator Dashboard.\n2. Open Configure and get a code.\n3. Enter the code below within five minutes.", InstructionsPosition, InstructionsSize, 21, TextAnchor.UpperLeft);
+        Image inputBg = Box("Code", card.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), CodeInputPosition, CodeInputSize, new Color(0.17f, 0.18f, 0.24f));
+        code = inputBg.gameObject.AddComponent<InputField>();
         RectTransform viewport = Rect("Text Area", inputBg.transform, Vector2.zero, Vector2.one, Vector2.zero, new Vector2(-24, -8));
         viewport.gameObject.AddComponent<RectMask2D>();
-        TMP_Text inputText = Text("Text", viewport, "", Vector2.zero, Vector2.zero, 22, TextAlignmentOptions.Left);
+        UnityEngine.UI.Text inputText = Text("Text", viewport, "", Vector2.zero, Vector2.zero, 22, TextAnchor.MiddleLeft);
         RectTransform textRect = inputText.rectTransform; textRect.anchorMin = Vector2.zero; textRect.anchorMax = Vector2.one; textRect.sizeDelta = Vector2.zero;
-        TMP_Text placeholder = Text("Placeholder", viewport, "Six-character code", Vector2.zero, Vector2.zero, 22, TextAlignmentOptions.Left);
+        UnityEngine.UI.Text placeholder = Text("Placeholder", viewport, "Six-character code", Vector2.zero, Vector2.zero, 22, TextAnchor.MiddleLeft);
         placeholder.rectTransform.anchorMin = Vector2.zero; placeholder.rectTransform.anchorMax = Vector2.one; placeholder.rectTransform.sizeDelta = Vector2.zero; placeholder.color = new Color(0.7f, 0.7f, 0.7f);
-        code.textViewport = viewport; code.textComponent = inputText; code.placeholder = placeholder; code.characterLimit = 6; code.lineType = TMP_InputField.LineType.SingleLine;
-        connectButton = MakeButton("Connect", card.transform, "Connect", new Vector2(208, -12), new Vector2(220, 55), buttonColor, Connect);
-        panelStatus = Text("Connection status", card.transform, "Not connected", new Vector2(0, -85), new Vector2(660, 30), 22, TextAlignmentOptions.Left);
-        message = Text("Help message", card.transform, "A code expires after five minutes. Get a new one if needed.", new Vector2(0, -140), new Vector2(660, 65), 18, TextAlignmentOptions.Left);
-        MakeButton("Open Twitch setup", card.transform, "Open Twitch setup", new Vector2(-184, -230), new Vector2(290, 55), buttonColor, delegate { Application.OpenURL(TwitchSetupUrl); });
-        disconnectButton = MakeButton("Disconnect", card.transform, "Disconnect", new Vector2(184, -230), new Vector2(290, 55), buttonColor, Disconnect);
+        code.textComponent = inputText; code.placeholder = placeholder; code.characterLimit = 6; code.lineType = InputField.LineType.SingleLine;
+        connectButton = MakeButton("Connect", card.transform, "Connect", ConnectButtonPosition, ConnectButtonSize, buttonColor, Connect);
+        panelStatus = Text("Connection status", card.transform, "Not connected", StatusPosition, StatusSize, 22, TextAnchor.MiddleLeft);
+        message = Text("Help message", card.transform, "A code expires after five minutes. Get a new one if needed.", MessagePosition, MessageSize, 18, TextAnchor.MiddleLeft);
+        setupButton = MakeButton("Open Twitch setup", card.transform, "Open Twitch setup", SetupButtonPosition, SetupButtonSize, buttonColor, OpenTwitchSetup);
+        disconnectButton = MakeButton("Disconnect", card.transform, "Disconnect", DisconnectButtonPosition, DisconnectButtonSize, buttonColor, Disconnect);
         modal.SetActive(false);
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class MuxyGatewayAuthentication : MonoBehaviour
@@ -8,8 +8,8 @@ public class MuxyGatewayAuthentication : MonoBehaviour
     [Header("Muxy Gateway Manager")]
     public MuxyGatewayManager GatewayManager;
 
-    private TMP_InputField PINInput;
-    private TMP_Text FailedAuthText;
+    private InputField PINInput;
+    private Text FailedAuthText;
     private GameObject PINGroup;
     private GameObject SuccessGroup;
 
@@ -25,8 +25,8 @@ public class MuxyGatewayAuthentication : MonoBehaviour
 
     void Start()
     {
-        PINInput = this.transform.Find("Canvas/PINGroup/PINInput").GetComponent<TMP_InputField>();
-        FailedAuthText = this.transform.Find("Canvas/FailedAuthText").GetComponent<TMP_Text>();
+        PINInput = this.transform.Find("Canvas/PINGroup/PINInput").GetComponent<InputField>();
+        FailedAuthText = this.transform.Find("Canvas/FailedAuthText").GetComponent<Text>();
         SuccessGroup = this.transform.Find("Canvas/SuccessGroup").gameObject;
         PINGroup = this.transform.Find("Canvas/PINGroup").gameObject;
     }
