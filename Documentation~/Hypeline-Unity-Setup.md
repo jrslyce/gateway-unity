@@ -18,7 +18,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 3. Drag **MuxyHypelineMenu** into the Hierarchy. Select it, then drag the scene's manager into its **Gateway Manager** field.
 4. Enter a **Game Description** that tells creators what viewers can do in your game. The TikTok coming-soon label and the artwork and colors are configurable in the Inspector.
 5. Set **Menu Button Position** to fit your menu. In the tested LEGO scene the default overlapped the existing top-left HUD; changing Y from `-24` to `-170` made the button visible. This value is an example, not a universal setting.
-6. Expand the menu prefab in the Hierarchy to edit **Stream Interactivity** and **Hypeline Panel → Card**. Place the menu under a Canvas to see it in the Scene view, and use the Rect Tool to position or resize its children. Toggle the panel GameObject off in edit mode to work on the launcher; the script opens and closes the panel at runtime. Existing older scene instances with no serialized hierarchy continue to build their UI at runtime; add the new prefab to use the editable hierarchy.
+6. Expand the menu prefab in the Hierarchy to edit **Stream Interactivity** and **Hypeline Panel → Card**. Place the menu under a Canvas to see it in the Scene view, and use the Rect Tool to position or resize its children. Toggle the panel GameObject off in edit mode to work on the launcher; the script opens and closes the panel at runtime. Older hierarchies rebuild at runtime; replace the scene instance with the updated prefab to edit the new hierarchy, and review any custom child overrides.
 
 ![Manager assigned in the Hypeline inspector](hypeline-images/unity-2020-wiring.png)
 
@@ -26,7 +26,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 
 1. On the broadcaster's Twitch Creator Dashboard, install and activate the existing Muxy Gateway extension in a supported slot.
 2. Open the extension's **Configure** view. Verify the game ID under **Linked Games**, and get the six-character code.
-3. Enter Play mode, select **Stream Interactivity**, enter the code, and select **Connect**. Codes expire after five minutes; use **Get New Code** in the extension configuration if necessary.
+3. Enter Play mode and select **Stream Interactivity**. Use **Open Twitch** to install and activate the extension, then **Open configuration** to return to the extension page and choose **Configure**. Enter the code and select **Connect**. Codes expire after five minutes; use **Get New Code** in the extension configuration if necessary.
 4. The fox and label display **Connected** after the transport is open and authentication succeeds. The panel can disconnect the creator or open the Twitch setup page.
 5. Use a separate viewer session to activate a configured action in the Twitch extension and observe the result in the game. A successful connection alone does not verify an action callback.
 
