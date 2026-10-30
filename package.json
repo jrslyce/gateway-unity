@@ -15,6 +15,11 @@
       "displayName": "First viewer action",
       "description": "Show a logo when a viewer activates an action.",
       "path": "Samples~/First Action"
+    },
+    {
+      "displayName": "DemoMaterials",
+      "description": "Optional action, poll and code-only tutorial examples. Remove the imported folder when finished.",
+      "path": "Samples~/DemoMaterials"
     }
   ],
   "documentationUrl": "https://muxy.github.io/gateway-unity/",
