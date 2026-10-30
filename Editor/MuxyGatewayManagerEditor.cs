@@ -7,6 +7,9 @@ public sealed class MuxyGatewayManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        if (PrefabUtility.IsPartOfImmutablePrefab(target))
+            EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyGatewayManager into the scene, select it in the Hierarchy, and expand Game Metadata to edit it.", MessageType.Info);
+
         serializedObject.Update();
         DrawDefaultInspector();
         serializedObject.Update();
