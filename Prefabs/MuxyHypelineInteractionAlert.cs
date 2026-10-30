@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class MuxyHypelineInteractionAlert : MonoBehaviour
 {
     public MuxyGatewayManager GatewayManager;
+    [Tooltip("Optional wordmark displayed beside each alert.")]
+    public Texture2D WordmarkArtwork;
     [Tooltip("Offset from the upper-right corner, in reference-resolution pixels.")]
     public Vector2 Position = new Vector2(-48, -220);
     public Vector2 Size = new Vector2(480, 110);
@@ -158,12 +160,30 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         accentImage.color = AccentColor;
         accentImage.raycastTarget = false;
 
+        float logoWidth = WordmarkArtwork != null ? Mathf.Clamp(Size.x * 0.28f, 0f, 132f) : 0f;
+        if (WordmarkArtwork != null && logoWidth > 0f)
+        {
+            GameObject logo = new GameObject("Hypeline wordmark", typeof(RectTransform), typeof(RawImage));
+            RectTransform logoRect = logo.GetComponent<RectTransform>();
+            logoRect.SetParent(rect, false);
+            logoRect.anchorMin = logoRect.anchorMax = new Vector2(0, 0.5f);
+            logoRect.pivot = new Vector2(0, 0.5f);
+            logoRect.anchoredPosition = new Vector2(24, 0);
+            float logoHeight = logoWidth * WordmarkArtwork.height / Mathf.Max(1f, WordmarkArtwork.width);
+            float maxHeight = Mathf.Max(0f, Size.y - 32f);
+            if (logoHeight > maxHeight && logoHeight > 0f) { logoWidth *= maxHeight / logoHeight; logoHeight = maxHeight; }
+            logoRect.sizeDelta = new Vector2(logoWidth, logoHeight);
+            RawImage logoImage = logo.GetComponent<RawImage>();
+            logoImage.texture = WordmarkArtwork;
+            logoImage.raycastTarget = false;
+        }
+
         GameObject label = new GameObject("Message", typeof(RectTransform), typeof(Text));
         RectTransform labelRect = label.GetComponent<RectTransform>();
         labelRect.SetParent(rect, false);
         labelRect.anchorMin = Vector2.zero;
         labelRect.anchorMax = Vector2.one;
-        labelRect.offsetMin = new Vector2(28, 12);
+        labelRect.offsetMin = new Vector2(logoWidth > 0f ? 24 + logoWidth + 20 : 28, 12);
         labelRect.offsetMax = new Vector2(-20, -12);
         Text message = label.GetComponent<Text>();
 #if UNITY_2022_2_OR_NEWER
@@ -172,7 +192,8 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         message.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
 #endif
         message.text = text;
-        message.fontSize = 27;
+        message.fontSize = 24;
+        message.lineSpacing = 1.25f;
         message.color = Color.white;
         message.alignment = TextAnchor.MiddleLeft;
         message.supportRichText = false;

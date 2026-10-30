@@ -303,17 +303,17 @@ public class MuxyHypelineMenu : MonoBehaviour
         Image mark = Box("Hypeline wordmark", card.transform, center, center, new Vector2(-190, 292), new Vector2(270, 62), Color.white);
         mark.sprite = MakeSprite(WordmarkArtwork); mark.preserveAspect = true; mark.raycastTarget = false;
         closeButton = MakeButton("Close", card.transform, "Close", new Vector2(290, 292), new Vector2(90, 42), teal, ClosePanel);
-        var headline = Text("Headline", card.transform, "Play with your audience", new Vector2(0, 235), new Vector2(640, 49), 34, TextAnchor.MiddleLeft);
+        var headline = Text("Headline", card.transform, "Play with your audience", new Vector2(0, 230), new Vector2(640, 49), 34, TextAnchor.MiddleLeft);
         headline.fontStyle = FontStyle.Bold;
-        Text("Description", card.transform, GameDescription, new Vector2(0, 185), new Vector2(640, 52), 20, TextAnchor.MiddleLeft);
-        Image twitch = Box("Twitch", card.transform, center, center, new Vector2(-165, 133), new Vector2(310, 46), section);
+        Text("Description", card.transform, GameDescription, new Vector2(0, 170), new Vector2(640, 52), 20, TextAnchor.MiddleLeft).lineSpacing = 1.2f;
+        Image twitch = Box("Twitch", card.transform, center, center, new Vector2(-165, 110), new Vector2(310, 46), section);
         AddTealOutline(twitch);
         Text("Label", twitch.transform, "TWITCH", Vector2.zero, new Vector2(290, 40), 20, TextAnchor.MiddleCenter).fontStyle = FontStyle.Bold;
-        Image tiktok = Box("TikTok", card.transform, center, center, new Vector2(165, 133), new Vector2(310, 46), section);
+        Image tiktok = Box("TikTok", card.transform, center, center, new Vector2(165, 110), new Vector2(310, 46), section);
         Text("Label", tiktok.transform, "TikTok  -  Coming soon", Vector2.zero, new Vector2(290, 40), 18, TextAnchor.MiddleCenter).color = new Color(.60f, .64f, .62f);
         tiktok.gameObject.SetActive(ShowTikTokComingSoon);
 
-        Image steps = Box("Setup steps", card.transform, center, center, new Vector2(0, 16), new Vector2(640, 172), section);
+        Image steps = Box("Setup steps", card.transform, center, center, new Vector2(0, -8), new Vector2(640, 172), section);
         AddTealOutline(steps);
         Text("Step 1", steps.transform, "1   Install and activate the extension", new Vector2(-108, 55), new Vector2(400, 40), 19, TextAnchor.MiddleLeft);
         setupButton = MakeButton("Open Twitch", steps.transform, "Open Twitch", new Vector2(205, 55), new Vector2(205, 42), teal, OpenTwitchSetup);
@@ -332,14 +332,14 @@ public class MuxyHypelineMenu : MonoBehaviour
         code.textComponent = inputText; code.placeholder = placeholder; code.characterLimit = 6; code.lineType = InputField.LineType.SingleLine;
         connectButton = MakeButton("Connect", steps.transform, "Connect", new Vector2(235, -55), new Vector2(145, 42), teal, Connect);
 
-        statusBackground = Box("Status card", card.transform, center, center, new Vector2(0, -157), new Vector2(640, 135), section);
+        statusBackground = Box("Status card", card.transform, center, center, new Vector2(0, -180), new Vector2(640, 135), section);
         AddTealOutline(statusBackground);
         statusFox = Box("Status fox", statusBackground.transform, center, center, new Vector2(-260, 0), new Vector2(64, 64), DisconnectedColor);
         statusFox.sprite = MakeSprite(FoxArtwork); statusFox.preserveAspect = true; statusFox.raycastTarget = false;
         panelStatus = Text("Connection status", statusBackground.transform, "Not connected", new Vector2(48, 24), new Vector2(480, 38), 25, TextAnchor.MiddleLeft);
         panelStatus.fontStyle = FontStyle.Bold;
         message = Text("Help message", statusBackground.transform, "Follow the steps above to connect Twitch.", new Vector2(48, -27), new Vector2(480, 55), 17, TextAnchor.MiddleLeft);
-        disconnectButton = MakeButton("Disconnect", card.transform, "Disconnect", new Vector2(217, -287), new Vector2(205, 45), teal, Disconnect);
+        disconnectButton = MakeButton("Disconnect", card.transform, "Disconnect", new Vector2(217, -292), new Vector2(205, 45), teal, Disconnect);
         modal.SetActive(false);
     }
 }
