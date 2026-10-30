@@ -9,7 +9,7 @@ public class MuxyGatewayManager : MonoBehaviour
 {
 
     [Header("Game ID")]
-    public String GameID = "";
+    public String GameID = "gamelink-testing";
 
     [SerializeField] private GameMetadata GameMetadata = new GameMetadata();
     [Tooltip("Optional logo texture. It is encoded as a PNG data URI when game metadata is published.")]
@@ -105,6 +105,7 @@ public class MuxyGatewayManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if (String.IsNullOrWhiteSpace(GameID)) GameID = "gamelink-testing";
         if (SDK == null)
         {
             SDK = new SDK(GameID);

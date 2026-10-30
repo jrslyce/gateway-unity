@@ -14,7 +14,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 ## 2. Add and wire the prefabs
 
 1. Drag **MuxyGatewayManager** from the Prefabs folder into the Hierarchy. If the scene already has a manager, reuse it; only one should be active.
-2. Select the manager and enter the game ID linked to the broadcaster in Twitch's extension configuration. Set game metadata and configure the actions your game supports.
+2. Select the manager. Its Game ID defaults to `gamelink-testing`; configure game metadata and the actions your game supports. Existing managers with an empty Game ID use the same testing ID at runtime.
 3. Drag **MuxyHypelineMenu** into the Hierarchy. Select it, then drag the scene's manager into its **Gateway Manager** field.
 4. Enter a **Game Description** that tells creators what viewers can do in your game. The TikTok coming-soon label and the artwork and colors are configurable in the Inspector.
 5. Set **Menu Button Position** to fit your menu. In the tested LEGO scene the default overlapped the existing top-left HUD; changing Y from `-24` to `-170` made the button visible. This value is an example, not a universal setting.

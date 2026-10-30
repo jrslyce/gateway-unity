@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea8341c31b4f264a97636fb4a7d638a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameID: 
+  GameID: gamelink-testing
   GameMetadata:
     Name: 
     Logo: 

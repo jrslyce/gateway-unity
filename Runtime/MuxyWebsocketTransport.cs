@@ -316,6 +316,7 @@ namespace MuxyGateway
             }
             catch (Exception ex)
             {
+                if (Done) return;
                 LogMessage(ex.ToString());
 
                 if (!Done)
@@ -383,6 +384,7 @@ namespace MuxyGateway
                 }
                 catch (Exception ex)
                 {
+                    if (Done) return;
                     LogMessage(ex.ToString());
                     if (!Done)
                     {

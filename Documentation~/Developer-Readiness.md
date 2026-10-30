@@ -3,7 +3,7 @@
 ## Before your first connection
 
 1. Install the package with Unity's Package Manager and select its `package.json`. Keep the extracted folder in place when using a local package.
-2. Add one `MuxyGatewayManager` to the scene. Set its Game ID to the exact ID listed under **Linked Games** in your broadcaster's Twitch extension configuration. The example ID in older documentation is not necessarily linked to your channel.
+2. Add one `MuxyGatewayManager` to the scene. Its Game ID defaults to `gamelink-testing`; existing managers with an empty Game ID use the same testing ID at runtime.
 3. Set the game name. To use a logo, assign a texture to **Game Logo**. Enable **Read/Write** and choose an uncompressed RGB24, RGBA32, or ARGB32 format in its import settings. The text Logo field is a legacy encoded-data fallback.
 4. Add `MuxyHypelineMenu`, assign the manager, and ensure the scene has one EventSystem using the input module appropriate to your project's input settings.
 5. Activate the Gateway extension on the broadcaster's channel. Open Configure, generate a fresh six-character PIN, and enter it in the game. A PIN expires after five minutes. Do not share the PIN or authentication tokens.
