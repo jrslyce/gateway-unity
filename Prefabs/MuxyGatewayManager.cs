@@ -65,11 +65,13 @@ public class MuxyGatewayManager : MonoBehaviour
         {
             if (Response.HasError)
             {
+                Debug.LogWarning("Hypeline: Twitch authentication failed. Request a new code and check the extension configuration.");
                 PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, "");
                 OnAuthentication.Invoke(Response);
                 return;
             }
 
+            Debug.Log("Hypeline: Twitch authentication succeeded.");
             if (RememberSession) PlayerPrefs.SetString(PLAYER_PREFS_REFRESH_TOKEN, Response.RefreshToken);
             else ClearSavedSession();
 
@@ -89,6 +91,7 @@ public class MuxyGatewayManager : MonoBehaviour
         String RefreshToken = PlayerPrefs.GetString(PLAYER_PREFS_REFRESH_TOKEN, "");
         if (RefreshToken != "")
         {
+            Debug.Log("Hypeline: Restoring the saved Twitch session.");
             OpenAndRunSDK();
             SDK.AuthenticateWithRefreshToken(RefreshToken, AuthCB);
         }
@@ -128,6 +131,7 @@ public class MuxyGatewayManager : MonoBehaviour
             SDK = new SDK(GameID);
             SetupCallbacks();
         }
+        Debug.Log("Hypeline: Starting the Twitch connection.");
         SDK.RunInProduction();
         DidOpenAndRun = true;
     }
@@ -139,6 +143,10 @@ public class MuxyGatewayManager : MonoBehaviour
         if (state != lastTransportState)
         {
             lastTransportState = state;
+            if (state == GatewayTransportState.Error)
+                Debug.LogWarning("Hypeline: Connection transport failed. Check the network and earlier transport warnings.");
+            else
+                Debug.Log("Hypeline: Connection transport is " + state + ".");
             OnTransportStateChanged.Invoke(state);
             if (SDK == null) return;
         }
@@ -148,6 +156,7 @@ public class MuxyGatewayManager : MonoBehaviour
 
     public void AuthenticateWithPIN(String PIN)
     {
+        Debug.Log("Hypeline: Twitch code submitted; waiting for authentication.");
         OpenAndRunSDK();
         SDK.AuthenticateWithPIN(PIN, AuthCB);
     }

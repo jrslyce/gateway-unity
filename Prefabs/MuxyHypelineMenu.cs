@@ -55,7 +55,9 @@ public class MuxyHypelineMenu : MonoBehaviour
     [SerializeField] private InputField code;
     [SerializeField] private GameObject modal;
     [SerializeField] private Button menuButton, connectButton, disconnectButton, closeButton, setupButton, configurationButton;
-    private bool requested, authError;
+    private bool requested, authError, authenticationTimedOut;
+    private float authenticationDeadline;
+    private const float AuthenticationTimeoutSeconds = 30f;
     private string lastStatus;
     private GameObject previousSelection;
 
@@ -116,6 +118,14 @@ public class MuxyHypelineMenu : MonoBehaviour
 
     private void Update()
     {
+        if (requested && (GatewayManager == null || !GatewayManager.IsAuthenticated()) && Time.realtimeSinceStartup >= authenticationDeadline)
+        {
+            requested = false;
+            authenticationTimedOut = true;
+            authError = true;
+            lastStatus = null;
+            Debug.LogWarning("Hypeline: Twitch authentication timed out after 30 seconds. Restart Play mode and request a new code before retrying.");
+        }
         string status;
         Color color;
         if (GatewayManager == null) { status = "Setup required"; color = ErrorColor; }
@@ -140,17 +150,24 @@ public class MuxyHypelineMenu : MonoBehaviour
             lastStatus = status;
             if (status == "Connected") message.text = "Twitch is ready.";
             else if (status == "Not connected") message.text = "Follow the steps above to connect Twitch.";
-            else if (status == "Connection issue") message.text = "Could not connect. Check your internet connection or get a new code and try again.";
+            else if (status == "Connection issue") message.text = authenticationTimedOut
+                ? "No authentication response. Restart Play mode and get a new code before retrying."
+                : "Could not connect. Check your internet connection or get a new code and try again.";
             else if (status == "Reconnecting...") message.text = "Trying to restore your connection.";
             else if (status == "Setup required") message.text = "Assign the Gateway Manager in the Inspector.";
         }
-        connectButton.interactable = GatewayManager != null && status != "Connected" && status != "Connecting..." && status != "Reconnecting...";
+        if (requested && status == "Connecting...")
+            message.text = GatewayManager.TransportState == GatewayTransportState.Connected
+                ? "Connected to the service; waiting for Twitch authentication."
+                : "Opening the connection to the service...";
+        connectButton.interactable = GatewayManager != null && !authenticationTimedOut && status != "Connected" && status != "Connecting..." && status != "Reconnecting...";
         disconnectButton.interactable = GatewayManager != null && (status == "Connected" || status == "Reconnecting...");
     }
 
     private void AuthenticationFinished(AuthenticationResponse response)
     {
         requested = false;
+        authenticationTimedOut = false;
         authError = response.HasError;
         if (code != null) code.text = "";
     }
@@ -179,7 +196,9 @@ public class MuxyHypelineMenu : MonoBehaviour
             return;
         }
         authError = false;
+        authenticationTimedOut = false;
         requested = true;
+        authenticationDeadline = Time.realtimeSinceStartup + AuthenticationTimeoutSeconds;
         message.text = "Connecting to Twitch...";
         GatewayManager.AuthenticateWithPIN(pin);
         code.text = "";
