@@ -48,6 +48,8 @@ public class MuxyHypelineMenu : MonoBehaviour
     [HideInInspector] public Vector2 DisconnectButtonPosition = new Vector2(184, -230);
     [HideInInspector] public Vector2 DisconnectButtonSize = new Vector2(290, 55);
 
+    public bool IsPanelOpen { get { return modal != null && modal.activeInHierarchy; } }
+
     public UnityEvent OnPanelOpened = new UnityEvent();
     public UnityEvent OnPanelClosed = new UnityEvent();
 
@@ -97,7 +99,12 @@ public class MuxyHypelineMenu : MonoBehaviour
             fox.sprite = MakeSprite(FoxArtwork);
             statusFox.sprite = MakeSprite(FoxArtwork);
             var mark = modal.transform.Find("Card/Muxy logo") ?? modal.transform.Find("Card/Hypeline wordmark");
-            if (mark != null) mark.GetComponent<Image>().sprite = MakeSprite(WordmarkArtwork);
+            if (mark != null)
+            {
+                var markImage = mark.GetComponent<Image>();
+                markImage.sprite = MakeSprite(WordmarkArtwork);
+                markImage.preserveAspect = true;
+            }
             var description = modal.transform.Find("Card/Description");
             if (description != null) description.GetComponent<UnityEngine.UI.Text>().text = GameDescription;
             var platform = modal.transform.Find("Card/TikTok");
