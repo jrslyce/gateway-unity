@@ -9,7 +9,8 @@ using UnityEngine.Events;
 public class MuxyHypelineManager : MonoBehaviour
 {
 
-    [HideInInspector]
+    [InspectorName("Game ID")]
+    [Tooltip("The ID for this game. Set it before Play mode; use gamelink-testing while testing.")]
     public String GameID = "gamelink-testing";
 
     [SerializeField] private GameMetadata GameMetadata = new GameMetadata();
