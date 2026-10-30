@@ -58,10 +58,11 @@ public class MuxyHypelineMenu : MonoBehaviour
     [SerializeField] private Button menuButton, connectButton, disconnectButton, closeButton, setupButton, configurationButton;
     private bool requested, authError, authenticationTimedOut;
     private float authenticationDeadline;
-    private const float AuthenticationTimeoutSeconds = 30f;
+    private const float AuthenticationTimeoutSeconds = 8f;
     private string lastStatus;
     private GameObject previousSelection;
     private RawImage twitchIndicator, tikTokIndicator;
+    private Image connectionProgress;
 
     private void Awake()
     {
@@ -103,6 +104,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             if (platform != null) platform.gameObject.SetActive(ShowTikTokComingSoon);
         }
         EnsurePlatformIndicators();
+        EnsureConnectionProgress();
         // The prefab can be saved without a parent canvas; set this after it is instantiated.
         var overlayCanvas = modal.GetComponent<Canvas>();
         if (overlayCanvas != null) { overlayCanvas.overrideSorting = true; overlayCanvas.sortingOrder = 10000; }
@@ -127,7 +129,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             authenticationTimedOut = true;
             authError = true;
             lastStatus = null;
-            Debug.LogWarning("Hypeline: Twitch authentication timed out after 30 seconds. Restart Play mode and request a new code before retrying.");
+            Debug.LogWarning("Hypeline: No Twitch authentication response after 8 seconds. A response may still arrive; restart Play mode and request a new code before retrying.");
         }
         string status;
         Color color;
@@ -145,9 +147,16 @@ public class MuxyHypelineMenu : MonoBehaviour
         fox.color = color;
         UpdatePlatformIndicators(status == "Connected");
         menuStatus.text = status;
-        panelStatus.text = status == "Connected" ? "You are connected" : status;
+        float remaining = Mathf.Max(0f, authenticationDeadline - Time.realtimeSinceStartup);
+        bool showingProgress = requested && status == "Connecting...";
+        panelStatus.text = status == "Connected" ? "You are connected" : showingProgress ? "Connecting... " + Mathf.CeilToInt(remaining) + "s" : status;
         panelStatus.color = color;
-        statusFox.color = color;
+        statusFox.color = showingProgress ? new Color(.20f, .28f, .25f, .85f) : color;
+        if (connectionProgress != null)
+        {
+            connectionProgress.gameObject.SetActive(showingProgress);
+            if (showingProgress) connectionProgress.fillAmount = Mathf.Clamp01(1f - remaining / AuthenticationTimeoutSeconds);
+        }
         statusBackground.color = status == "Connected" ? new Color(.025f, .17f, .09f) : new Color(.075f, .095f, .09f);
         if (status != lastStatus)
         {
@@ -155,7 +164,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             if (status == "Connected") message.text = "Twitch is ready.";
             else if (status == "Not connected") message.text = "Follow the steps above to connect Twitch.";
             else if (status == "Connection issue") message.text = authenticationTimedOut
-                ? "No authentication response. Restart Play mode and get a new code before retrying."
+                ? "No response yet. Restart Play mode and get a new code to retry."
                 : "Could not connect. Check your internet connection or get a new code and try again.";
             else if (status == "Reconnecting...") message.text = "Trying to restore your connection.";
             else if (status == "Setup required") message.text = "Assign the Hypeline Manager in the Inspector.";
@@ -275,6 +284,25 @@ public class MuxyHypelineMenu : MonoBehaviour
         button.targetGraphic = image; button.onClick.AddListener(action);
         Text("Label", image.transform, label, Vector2.zero, size - new Vector2(12, 6), 17, TextAnchor.MiddleCenter).color = new Color(0.05098f, 0.05098f, 0.05098f);
         return button;
+    }
+
+    private void EnsureConnectionProgress()
+    {
+        if (statusFox == null) return;
+        Transform existing = statusFox.transform.Find("Connection progress");
+        RectTransform rect = existing != null ? existing.GetComponent<RectTransform>() : Rect("Connection progress", statusFox.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+        if (rect == null) return;
+        connectionProgress = rect.GetComponent<Image>();
+        if (connectionProgress == null) connectionProgress = rect.gameObject.AddComponent<Image>();
+        connectionProgress.sprite = statusFox.sprite;
+        connectionProgress.preserveAspect = true;
+        connectionProgress.type = Image.Type.Filled;
+        connectionProgress.fillMethod = Image.FillMethod.Vertical;
+        connectionProgress.fillOrigin = (int)Image.OriginVertical.Bottom;
+        connectionProgress.fillAmount = 0f;
+        connectionProgress.color = ConnectedColor;
+        connectionProgress.raycastTarget = false;
+        connectionProgress.gameObject.SetActive(false);
     }
 
     private void EnsurePlatformIndicators()

@@ -48,6 +48,8 @@ public class MuxyGatewayManager : MonoBehaviour
 
     private bool DidOpenAndRun = false;
     private GatewayTransportState lastTransportState = GatewayTransportState.Disconnected;
+    private float pinStartedAt = -1f;
+    private float transportStartedAt = -1f;
 
     private void SetupCallbacks()
     {
@@ -63,6 +65,11 @@ public class MuxyGatewayManager : MonoBehaviour
 
         AuthCB = (Response) =>
         {
+            if (pinStartedAt >= 0f)
+            {
+                Debug.Log("Hypeline: Authentication response received after " + (Time.realtimeSinceStartup - pinStartedAt).ToString("F1") + " seconds.");
+                pinStartedAt = -1f;
+            }
             if (Response.HasError)
             {
                 Debug.LogWarning("Hypeline: Twitch authentication failed. Request a new code and check the extension configuration.");
@@ -131,6 +138,7 @@ public class MuxyGatewayManager : MonoBehaviour
             SDK = new SDK(GameID);
             SetupCallbacks();
         }
+        transportStartedAt = Time.realtimeSinceStartup;
         Debug.Log("Hypeline: Starting the Twitch connection.");
         SDK.RunInProduction();
         DidOpenAndRun = true;
@@ -143,6 +151,11 @@ public class MuxyGatewayManager : MonoBehaviour
         if (state != lastTransportState)
         {
             lastTransportState = state;
+            if (state == GatewayTransportState.Connected && transportStartedAt >= 0f)
+            {
+                Debug.Log("Hypeline: Connection transport opened after " + (Time.realtimeSinceStartup - transportStartedAt).ToString("F1") + " seconds.");
+                transportStartedAt = -1f;
+            }
             if (state == GatewayTransportState.Error)
                 Debug.LogWarning("Hypeline: Connection transport failed. Check the network and earlier transport warnings.");
             else
@@ -156,6 +169,7 @@ public class MuxyGatewayManager : MonoBehaviour
 
     public void AuthenticateWithPIN(String PIN)
     {
+        pinStartedAt = Time.realtimeSinceStartup;
         Debug.Log("Hypeline: Twitch code submitted; waiting for authentication.");
         OpenAndRunSDK();
         SDK.AuthenticateWithPIN(PIN, AuthCB);
