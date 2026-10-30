@@ -28,7 +28,7 @@ public sealed class MuxyHypelineManagerEditor : Editor
             {
                 EditorGUILayout.PropertyField(property, true);
                 if (property.propertyPath == "GameLogo")
-                    EditorGUILayout.HelpBox("Optional: assign a readable logo texture here. If set, it takes precedence over the encoded Logo field in Game Metadata.", MessageType.Info);
+                    EditorGUILayout.HelpBox("Optional: assign a readable logo texture here to show it in the Twitch extension.", MessageType.Info);
                 else if (property.propertyPath == "GameTexts" && property.isExpanded)
                     EditorGUILayout.HelpBox("Game Texts appear in the viewer's Game Info tab. For each entry, set the label and value; an icon name is optional. Update values from your game as they change.", MessageType.Info);
             }
@@ -74,7 +74,6 @@ public sealed class MuxyHypelineManagerEditor : Editor
         if (!metadata.isExpanded) return;
         EditorGUI.indentLevel++;
         DrawMetadataField(metadata, "Name", "Game name shown to viewers in the Twitch extension.");
-        DrawMetadataField(metadata, "Logo", "Optional encoded logo data URI. For most games, assign the Game Logo texture below instead.");
         DrawMetadataField(metadata, "Theme", "Optional extension theme name; use default for the standard theme.");
         EditorGUI.indentLevel--;
     }
