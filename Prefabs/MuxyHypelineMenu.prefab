@@ -52,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   HypelineManager: {fileID: 0}
   FoxArtwork: {fileID: 2800000, guid: a7d22486f4463e657bd2f2f6d76e2782, type: 3}
-  WordmarkArtwork: {fileID: 2800000, guid: 1bbebd9c6d7044aa855432c2b28a713c, type: 3}
+  WordmarkArtwork: {fileID: 2800000, guid: d1067ff22be9f7b41955e1ec8ddbbc7f, type: 3}
   GameDescription: Let your live audience interact with your game on Twitch and TikTok.
   ShowTikTokComingSoon: 1
   TwitchSetupUrl: https://dashboard.twitch.tv/extensions/i575hs2x9lb3u8hqujtezit03w1740
@@ -2274,7 +2274,7 @@ GameObject:
   - component: {fileID: 6617616989393470789}
   - component: {fileID: 8553541106002464461}
   m_Layer: 0
-  m_Name: Hypeline wordmark
+  m_Name: Muxy logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2296,8 +2296,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190, y: 292}
-  m_SizeDelta: {x: 270, y: 62}
+  m_AnchoredPosition: {x: -225, y: 292}
+  m_SizeDelta: {x: 190, y: 62}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6617616989393470789
 CanvasRenderer:
@@ -2762,6 +2762,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 390927443220000002}
   - {fileID: 5243544220892318336}
   - {fileID: 311159810314935443}
   - {fileID: 5987105146132560183}
@@ -3264,3 +3265,82 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: TWITCH
+--- !u!1 &390927443220000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 390927443220000002}
+  - component: {fileID: 390927443220000003}
+  - component: {fileID: 390927443220000004}
+  m_Layer: 0
+  m_Name: Hypeline brand label
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &390927443220000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390927443220000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3472064605986052993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -50, y: 292}
+  m_SizeDelta: {x: 140, y: 44}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &390927443220000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390927443220000001}
+  m_CullTransparentMesh: 1
+--- !u!114 &390927443220000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390927443220000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 26
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Hypeline

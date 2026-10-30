@@ -96,13 +96,14 @@ public class MuxyHypelineMenu : MonoBehaviour
             disconnectButton.onClick.AddListener(Disconnect);
             fox.sprite = MakeSprite(FoxArtwork);
             statusFox.sprite = MakeSprite(FoxArtwork);
-            var mark = modal.transform.Find("Card/Hypeline wordmark");
+            var mark = modal.transform.Find("Card/Muxy logo") ?? modal.transform.Find("Card/Hypeline wordmark");
             if (mark != null) mark.GetComponent<Image>().sprite = MakeSprite(WordmarkArtwork);
             var description = modal.transform.Find("Card/Description");
             if (description != null) description.GetComponent<UnityEngine.UI.Text>().text = GameDescription;
             var platform = modal.transform.Find("Card/TikTok");
             if (platform != null) platform.gameObject.SetActive(ShowTikTokComingSoon);
         }
+        EnsureBrandHeading();
         EnsurePlatformIndicators();
         EnsureConnectionProgress();
         // The prefab can be saved without a parent canvas; set this after it is instantiated.
@@ -294,6 +295,21 @@ public class MuxyHypelineMenu : MonoBehaviour
         return button;
     }
 
+    private void EnsureBrandHeading()
+    {
+        if (modal == null) return;
+        Transform card = modal.transform.Find("Card");
+        if (card == null) return;
+        Transform mark = card.Find("Muxy logo") ?? card.Find("Hypeline wordmark");
+        if (mark != null)
+        {
+            RectTransform rect = mark.GetComponent<RectTransform>();
+            if (rect != null) { rect.anchoredPosition = new Vector2(-225, 292); rect.sizeDelta = new Vector2(190, 62); }
+        }
+        if (card.Find("Hypeline brand label") == null)
+            Text("Hypeline brand label", card, "Hypeline", new Vector2(-50, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
+    }
+
     private void EnsureConnectionProgress()
     {
         if (statusFox == null) return;
@@ -367,8 +383,9 @@ public class MuxyHypelineMenu : MonoBehaviour
         modal.AddComponent<GraphicRaycaster>();
         Image card = Box("Card", modal.transform, center, center, Vector2.zero, new Vector2(720, 680), surface);
         AddTealOutline(card);
-        Image mark = Box("Hypeline wordmark", card.transform, center, center, new Vector2(-190, 292), new Vector2(270, 62), Color.white);
+        Image mark = Box("Muxy logo", card.transform, center, center, new Vector2(-225, 292), new Vector2(190, 62), Color.white);
         mark.sprite = MakeSprite(WordmarkArtwork); mark.preserveAspect = true; mark.raycastTarget = false;
+        Text("Hypeline brand label", card.transform, "Hypeline", new Vector2(-50, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
         closeButton = MakeButton("Close", card.transform, "Close", new Vector2(290, 292), new Vector2(90, 42), teal, ClosePanel);
         var headline = Text("Headline", card.transform, "Play with your audience", new Vector2(0, 230), new Vector2(640, 49), 34, TextAnchor.MiddleLeft);
         headline.fontStyle = FontStyle.Bold;
