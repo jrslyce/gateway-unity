@@ -5,7 +5,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 ## 1. Install the SDK
 
 1. In Unity, open **Window → Package Manager**.
-2. Add the Muxy Unity package. To test the local development copy, use **Add package from disk** and select its `package.json`. For a distributed package, use the package URL or release supplied by Muxy.
+2. Choose **Add package from git URL** and enter `https://github.com/jrslyce/gateway-unity.git#codex/hypeline-developer-readiness`. This is a development branch; record the resolved commit for your test. Alternatively, choose **Add package from disk** and select a local SDK checkout's `package.json`.
 3. Wait for package import and compilation. In the Project window, open **Packages → Muxy Hypeline → Prefabs**.
 4. The scene must contain one EventSystem, configured for the project's active input system. The included Hypeline prefabs use Unity UI and do not require TextMesh Pro.
 
@@ -30,9 +30,7 @@ This guide adds a main-menu connection button, Twitch setup panel, and fox conne
 4. The fox and label display **Connected** after the transport is open and authentication succeeds. The panel can disconnect the creator or open the Twitch setup page.
 5. Use a separate viewer session to activate a configured action in the Twitch extension and observe the result in the game. A successful connection alone does not verify an action callback.
 
-![Hypeline panel running in Unity 2020](hypeline-images/unity-2020-panel.png)
-
-![Hypeline connected in Unity 2020](hypeline-images/unity-2020-connected.png)
+The redesigned panel shows **You are connected** after successful authentication. The menu fox stays green while connected.
 
 Gray means not connected; amber means connecting or reconnecting; green means connected; red means a connection or authentication issue. These colors are paired with text labels. A newly added menu does not automatically create game actions: configure actions and their handlers on the manager or in game code.
 
@@ -53,17 +51,10 @@ In the LEGO test scene, **Test Neutral Alert** and **Test Hinder Alert** are zer
 
 The package uses Unity's resolved uGUI package for its built-in text and input components. TextMesh Pro and TMP Essential Resources are not required by these prefabs.
 
-In the tested Unity 6.6 demo, the manager and demo controller were already in the scene:
-
-1. Add **MuxyHypelineMenu** and assign the existing manager.
-2. The existing authentication prefab contains an EventSystem as a sibling of its Canvas. Disable the old authentication **Canvas** if replacing its UI, while keeping that EventSystem enabled.
-3. Select the EventSystem and use **Input System UI Input Module** for a new-Input-System-only project. The tested scene already had this module configured. Do not add a second EventSystem.
-4. Move the Hypeline button away from the demo's top-left controls; the test used Y `-550`. Adjust this to your own layout.
-5. Run the scene. The existing saved session reauthenticated automatically, the fox turned green, and the panel reported **Connected**.
-
-![Unity 6 EventSystem input module](hypeline-images/unity-6-input-system.png)
-
-![Unity 6 connected panel](hypeline-images/unity-6-connected.png)
+1. Add one **MuxyGatewayManager** and **MuxyHypelineMenu** to your scene, then assign the manager to the menu.
+2. Keep one active EventSystem. For a new-Input-System-only project, use **Input System UI Input Module**.
+3. Adjust the Hypeline button position to fit your menu. Enter Play mode, open **Stream Interactivity**, and follow the Twitch setup steps.
+4. Confirm the panel reports **You are connected** and the menu fox turns green. Check the `Hypeline:` Console messages if a connection fails or stalls.
 
 ## Verification and limitations
 
