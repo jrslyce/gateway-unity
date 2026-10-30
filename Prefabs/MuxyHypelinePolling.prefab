@@ -2417,6 +2417,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GatewayManager: {fileID: 0}
+  WordmarkArtwork: {fileID: 2800000, guid: 1bbebd9c6d7044aa855432c2b28a713c, type: 3}
+  Position: {x: -48, y: -72}
   WinnerPauseDuration: 3
 --- !u!1 &8892964871262116086
 GameObject:
