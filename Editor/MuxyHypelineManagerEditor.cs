@@ -7,7 +7,7 @@ public sealed class MuxyHypelineManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        if (PrefabUtility.IsPartOfImmutablePrefab(target))
+        if (EditorUtility.IsPersistent(target) && PrefabUtility.IsPartOfImmutablePrefab(target))
             EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyHypelineManager into the scene, select it in the Hierarchy, and expand Game Metadata to edit it.", MessageType.Info);
 
         serializedObject.Update();
