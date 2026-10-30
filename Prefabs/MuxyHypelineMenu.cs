@@ -61,6 +61,7 @@ public class MuxyHypelineMenu : MonoBehaviour
     private const float AuthenticationTimeoutSeconds = 30f;
     private string lastStatus;
     private GameObject previousSelection;
+    private RawImage twitchIndicator, tikTokIndicator;
 
     private void Awake()
     {
@@ -101,6 +102,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             var platform = modal.transform.Find("Card/TikTok");
             if (platform != null) platform.gameObject.SetActive(ShowTikTokComingSoon);
         }
+        EnsurePlatformIndicators();
         // The prefab can be saved without a parent canvas; set this after it is instantiated.
         var overlayCanvas = modal.GetComponent<Canvas>();
         if (overlayCanvas != null) { overlayCanvas.overrideSorting = true; overlayCanvas.sortingOrder = 10000; }
@@ -141,6 +143,7 @@ public class MuxyHypelineMenu : MonoBehaviour
         else { status = "Not connected"; color = DisconnectedColor; }
 
         fox.color = color;
+        UpdatePlatformIndicators(status == "Connected");
         menuStatus.text = status;
         panelStatus.text = status == "Connected" ? "You are connected" : status;
         panelStatus.color = color;
@@ -155,7 +158,7 @@ public class MuxyHypelineMenu : MonoBehaviour
                 ? "No authentication response. Restart Play mode and get a new code before retrying."
                 : "Could not connect. Check your internet connection or get a new code and try again.";
             else if (status == "Reconnecting...") message.text = "Trying to restore your connection.";
-            else if (status == "Setup required") message.text = "Assign the Gateway Manager in the Inspector.";
+            else if (status == "Setup required") message.text = "Assign the Hypeline Manager in the Inspector.";
         }
         if (requested && status == "Connecting...")
             message.text = GatewayManager.TransportState == GatewayTransportState.Connected
@@ -274,6 +277,33 @@ public class MuxyHypelineMenu : MonoBehaviour
         return button;
     }
 
+    private void EnsurePlatformIndicators()
+    {
+        if (menuButton == null) return;
+        Transform parent = menuButton.transform;
+        twitchIndicator = MakePlatformIndicator(parent, "Twitch indicator", "HypelinePlatformIcons/twitch", new Vector2(83, -14));
+        tikTokIndicator = MakePlatformIndicator(parent, "TikTok indicator", "HypelinePlatformIcons/tiktok", new Vector2(116, -14));
+        if (tikTokIndicator != null) { tikTokIndicator.color = new Color(.49f, .52f, .51f, .8f); tikTokIndicator.gameObject.SetActive(ShowTikTokComingSoon); }
+    }
+
+    private void UpdatePlatformIndicators(bool connected)
+    {
+        if (twitchIndicator != null) twitchIndicator.color = connected ? new Color(.66f, .42f, 1f) : new Color(.49f, .52f, .51f, .8f);
+        if (tikTokIndicator != null) tikTokIndicator.gameObject.SetActive(ShowTikTokComingSoon);
+    }
+
+    private static RawImage MakePlatformIndicator(Transform parent, string name, string resource, Vector2 position)
+    {
+        Transform existing = parent.Find(name);
+        RectTransform rect = existing != null ? existing.GetComponent<RectTransform>() : Rect(name, parent, new Vector2(.5f, .5f), new Vector2(.5f, .5f), position, new Vector2(22, 22));
+        if (rect == null) return null;
+        RawImage image = rect.GetComponent<RawImage>();
+        if (image == null) image = rect.gameObject.AddComponent<RawImage>();
+        image.texture = Resources.Load<Texture2D>(resource);
+        image.raycastTarget = false;
+        return image;
+    }
+
     private static Sprite MakeSprite(Texture2D texture)
     {
         return texture == null ? null : Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
@@ -291,7 +321,7 @@ public class MuxyHypelineMenu : MonoBehaviour
         fox = Box("Fox status", menu.transform, center, center, new Vector2(-112, 0), new Vector2(48, 48), DisconnectedColor);
         fox.sprite = MakeSprite(FoxArtwork); fox.preserveAspect = true; fox.raycastTarget = false;
         Text("Title", menu.transform, "Stream Interactivity", new Vector2(30, 13), new Vector2(204, 27), 21, TextAnchor.MiddleLeft).color = teal;
-        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(30, -14), new Vector2(204, 22), 16, TextAnchor.MiddleLeft);
+        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(-9, -14), new Vector2(126, 22), 15, TextAnchor.MiddleLeft);
 
         modal = Box("Hypeline Panel", transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0, 0, 0, .72f)).gameObject;
         // Keep the modal above game sprites even when the parent canvas uses a low sorting order.
