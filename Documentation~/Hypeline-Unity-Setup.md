@@ -58,21 +58,7 @@ The package uses Unity's resolved uGUI package for its built-in text and input c
 
 ## Verification and limitations
 
-- Unity 2020.3.0f1: local package imported; manager and menu were assigned; the menu opened in Play mode and connected using a fresh Twitch configuration code. The LEGO scene's existing HUD required a position adjustment. After registering `healthpack` and assigning the alert, a zero-cost Twitch action displayed the viewer and action and logged receipt. A LEGO-specific sample handler then spawned a visible healthpack beside the minifigure during a live Twitch action; the transaction was acknowledged. The LEGO tutorial has no health system, so this sample pickup does not heal. The handler is in the LEGO test project's Assets, and the scene setup must be saved there.
-- The public [Unity Gateway tutorial](https://docs.muxy.io/docs/unity-gateway-tutorial) contains older sample API names and syntax. Use the package's current API and the [maintained prefab quickstart](https://muxy.github.io/github-pages/docs/unity-gateway-prefab-quickstart/) when following along.
-- Unity 6000.6.6f1: authenticated automatically with an existing saved session. The free **Spawn Healthpack** Twitch action changed demo health from 50 to 60, and the extension's Game Info showed Health 60. A viewer voted Forest in a 30-second poll, and the game reported Forest as the winner.
-- The interaction alert script also compiled in Unity 6000.6.6f1 with no compiler errors; its live interaction test was performed in Unity 2020.
-- The Twitch configuration modal initially appeared blank and eventually loaded after a delay. Its precise cause was not determined. Do not record codes or tokens in screenshots, source control, or logs.
-- The tested Unity 2020 LEGO scene also produced unrelated LEGO tutorial and `AliveAction` errors; the Hypeline panel still opened. Test a clean project if diagnosing those scene-specific errors.
-- The existing manager stores refresh tokens in `PlayerPrefs`; that storage is not encrypted. This component does not add WebGL support.
-
-![Unity receives a viewer healthpack action](hypeline-images/unity-6-viewer-action.png)
-
-![A Twitch action spawned a healthpack beside the LEGO minifigure](hypeline-images/unity-2020-healthpack-spawn.png)
-
-![Game information reflects the changed health](hypeline-images/twitch-game-info.png)
-
-![Viewer vote](hypeline-images/twitch-poll.png)
-
-![Unity receives the poll result](hypeline-images/unity-6-poll-result.png)
-
+- The redesigned menu and its open/close behavior were checked in Unity 6000.0.85f1. The package also imported and compiled in Unity 2022.3.62f3. Historical validation is recorded in [verification](VERIFICATION.md); it should not be treated as a live test of the current redesigned panel.
+- Test a fresh connection and a real viewer action in your own project and target player. A connected indicator or visual alert does not prove the gameplay effect or transaction was fulfilled.
+- The manager stores refresh tokens in `PlayerPrefs`, which is not encrypted. This package does not add WebGL support.
+- If connection stalls, review the `Hypeline:` Console messages. After a timeout, restart Play mode and request a fresh code. Never share PINs or tokens.
