@@ -311,10 +311,17 @@ public class MuxyHypelineMenu : MonoBehaviour
         if (mark != null)
         {
             RectTransform rect = mark.GetComponent<RectTransform>();
-            if (rect != null) { rect.anchoredPosition = new Vector2(-225, 292); rect.sizeDelta = new Vector2(190, 62); }
+            if (rect != null) { rect.anchoredPosition = new Vector2(-250, 292); rect.sizeDelta = new Vector2(154, 62); }
         }
-        if (card.Find("Hypeline brand label") == null)
-            Text("Hypeline brand label", card, "Hypeline", new Vector2(-50, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
+        Transform label = card.Find("Hypeline brand label");
+        if (label == null)
+            Text("Hypeline brand label", card, "Hypeline", new Vector2(-95, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
+        else
+        {
+            RectTransform rect = label.GetComponent<RectTransform>();
+            if (rect != null && rect.anchoredPosition == new Vector2(-50, 292) && rect.sizeDelta == new Vector2(140, 44))
+                rect.anchoredPosition = new Vector2(-95, 292);
+        }
     }
 
     private void EnsureConnectionProgress()
@@ -390,9 +397,9 @@ public class MuxyHypelineMenu : MonoBehaviour
         modal.AddComponent<GraphicRaycaster>();
         Image card = Box("Card", modal.transform, center, center, Vector2.zero, new Vector2(720, 680), surface);
         AddTealOutline(card);
-        Image mark = Box("Muxy logo", card.transform, center, center, new Vector2(-225, 292), new Vector2(190, 62), Color.white);
+        Image mark = Box("Muxy logo", card.transform, center, center, new Vector2(-250, 292), new Vector2(154, 62), Color.white);
         mark.sprite = MakeSprite(WordmarkArtwork); mark.preserveAspect = true; mark.raycastTarget = false;
-        Text("Hypeline brand label", card.transform, "Hypeline", new Vector2(-50, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
+        Text("Hypeline brand label", card.transform, "Hypeline", new Vector2(-95, 292), new Vector2(140, 44), 26, TextAnchor.MiddleLeft).fontStyle = FontStyle.Bold;
         closeButton = MakeButton("Close", card.transform, "Close", new Vector2(290, 292), new Vector2(90, 42), teal, ClosePanel);
         var headline = Text("Headline", card.transform, "Play with your audience", new Vector2(0, 230), new Vector2(640, 49), 34, TextAnchor.MiddleLeft);
         headline.fontStyle = FontStyle.Bold;
