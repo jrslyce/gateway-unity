@@ -41,8 +41,13 @@ namespace MuxyHypeline
     [Serializable]
     public class GameText
     {
+        [Tooltip("Label shown next to this value in the Twitch Game Info tab.")]
         public string Label;
+
+        [Tooltip("Current value shown to viewers. Update it as your game changes.")]
         public string Value;
+
+        [Tooltip("Optional icon name from the Hypeline icon library, such as fa-solid:heart.")]
         public string Icon;
     }
 

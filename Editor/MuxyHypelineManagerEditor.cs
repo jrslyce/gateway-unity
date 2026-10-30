@@ -8,11 +8,32 @@ public sealed class MuxyHypelineManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         if (EditorUtility.IsPersistent(target) && PrefabUtility.IsPartOfImmutablePrefab(target))
-            EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyHypelineManager into the scene, select it in the Hierarchy, and expand Game Metadata to edit it.", MessageType.Info);
+            EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyHypelineManager into the scene and select it in the Hierarchy to edit its settings.", MessageType.Info);
 
         serializedObject.Update();
-        DrawDefaultInspector();
-        serializedObject.Update();
+        SerializedProperty property = serializedObject.GetIterator();
+        bool enterChildren = true;
+        while (property.NextVisible(enterChildren))
+        {
+            enterChildren = false;
+            if (property.propertyPath == "m_Script")
+            {
+                using (new EditorGUI.DisabledScope(true)) EditorGUILayout.PropertyField(property, true);
+            }
+            else if (property.propertyPath == "GameMetadata")
+            {
+                DrawMetadata(property);
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(property, true);
+                if (property.propertyPath == "GameLogo")
+                    EditorGUILayout.HelpBox("Optional: assign a readable logo texture here. If set, it takes precedence over the encoded Logo field in Game Metadata.", MessageType.Info);
+                else if (property.propertyPath == "GameTexts" && property.isExpanded)
+                    EditorGUILayout.HelpBox("Game Texts appear in the viewer's Game Info tab. For each entry, set the label and value; an icon name is optional. Update values from your game as they change.", MessageType.Info);
+            }
+        }
+        serializedObject.ApplyModifiedProperties();
 
         SerializedProperty metadata = serializedObject.FindProperty("GameMetadata");
         SerializedProperty name = metadata == null ? null : metadata.FindPropertyRelative("Name");
@@ -45,5 +66,24 @@ public sealed class MuxyHypelineManagerEditor : Editor
                     EditorGUILayout.HelpBox("Duplicate Game Action ID: " + value, MessageType.Warning);
             }
         }
+    }
+
+    private static void DrawMetadata(SerializedProperty metadata)
+    {
+        metadata.isExpanded = EditorGUILayout.Foldout(metadata.isExpanded, "Game Metadata", true);
+        if (!metadata.isExpanded) return;
+        EditorGUI.indentLevel++;
+        DrawMetadataField(metadata, "Name", "Game name shown to viewers in the Twitch extension.");
+        DrawMetadataField(metadata, "Logo", "Optional encoded logo data URI. For most games, assign the Game Logo texture below instead.");
+        DrawMetadataField(metadata, "Theme", "Optional extension theme name; use default for the standard theme.");
+        EditorGUI.indentLevel--;
+    }
+
+    private static void DrawMetadataField(SerializedProperty metadata, string name, string guidance)
+    {
+        SerializedProperty field = metadata.FindPropertyRelative(name);
+        if (field == null) return;
+        EditorGUILayout.PropertyField(field, new GUIContent(field.displayName, guidance));
+        EditorGUILayout.HelpBox(guidance, MessageType.None);
     }
 }
