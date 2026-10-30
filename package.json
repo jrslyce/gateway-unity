@@ -2,7 +2,7 @@
   "name": "com.muxy.gateway",
   "version": "0.0.1",
   "displayName": "Muxy Hypeline",
-  "description": "Muxy Hypeline adds Twitch viewer interactivity to your game using Muxy's Gateway service and Twitch extension. Create audience-interactive mechanics, share game data, and run polls.",
+  "description": "Muxy Hypeline connects your Unity game to live audience interactions on Twitch.",
   "unity": "2020.3",
   "unityRelease": "0f1",
   "dependencies": {
@@ -17,7 +17,7 @@
       "path": "Samples~/First Action"
     }
   ],
-  "documentationUrl": "https://docs.muxy.io/",
+  "documentationUrl": "https://muxy.github.io/gateway-unity/",
   "changelogUrl": "",
   "licensesUrl": "",
   "author": {

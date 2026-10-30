@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MuxyGateway;
+using MuxyHypeline;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MuxyHypelineInteractionAlert : MonoBehaviour
 {
     [InspectorName("Hypeline Manager")]
-    public MuxyHypelineManager GatewayManager;
+    [UnityEngine.Serialization.FormerlySerializedAs("GatewayManager")] public MuxyHypelineManager HypelineManager;
     [Tooltip("Optional Muxy logo displayed beside each alert.")]
     public Texture2D WordmarkArtwork;
     [Tooltip("Offset from the upper-right corner, in reference-resolution pixels.")]
@@ -58,13 +58,13 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
         audioSource.ignoreListenerPause = true;
-        if (GatewayManager != null) GatewayManager.OnAnyGameActionUsed.AddListener(OnActionUsed);
-        else Debug.LogWarning("Hypeline interaction alert needs a Gateway Manager reference.", this);
+        if (HypelineManager != null) HypelineManager.OnAnyGameActionUsed.AddListener(OnActionUsed);
+        else Debug.LogWarning("Hypeline interaction alert needs a Hypeline Manager reference.", this);
     }
 
     private void OnDisable()
     {
-        if (GatewayManager != null) GatewayManager.OnAnyGameActionUsed.RemoveListener(OnActionUsed);
+        if (HypelineManager != null) HypelineManager.OnAnyGameActionUsed.RemoveListener(OnActionUsed);
         foreach (Alert alert in alerts) if (alert.root != null) Destroy(alert.root);
         alerts.Clear();
         if (audioSource != null) audioSource.Stop();
@@ -109,7 +109,7 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
     private void OnActionUsed(GameActionUsed used)
     {
         if (used == null) return;
-        GameAction action = GatewayManager.FindGameAction(used.ActionID);
+        GameAction action = HypelineManager.FindGameAction(used.ActionID);
         string actionName = action != null && !string.IsNullOrWhiteSpace(action.Name) ? action.Name : used.ActionID;
         GameActionCategory category = action != null ? action.Category : GameActionCategory.Neutral;
         if (LogReceivedActions) Debug.Log("Hypeline interaction received: " + (used.Username ?? "") + " — " + (actionName ?? ""), this);

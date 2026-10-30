@@ -4,9 +4,9 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using MuxyGateway;
-using MuxyGateway.Imports;
-using MuxyGateway.Imports.Schema;
+using MuxyHypeline;
+using MuxyHypeline.Imports;
+using MuxyHypeline.Imports.Schema;
 using UnityEngine;
 
 public static class GatewayCompatibilityPlayerValidation
@@ -46,8 +46,8 @@ public static class GatewayCompatibilityPlayerValidation
         try
         {
             report.publicTypes = true;
-            foreach (Type type in new[] { typeof(SDK), typeof(GameMetadata), typeof(MuxyHypelineManager), typeof(MuxyHypelineLegacyAuthenticationUI), typeof(MuxyHypelinePolling), typeof(MuxyHypelineLegacyNotifications) })
-                report.publicTypes &= type.Assembly.GetName().Name == "Muxy.Gateway";
+            foreach (Type type in new[] { typeof(SDK), typeof(GameMetadata), typeof(MuxyHypelineManager), typeof(MuxyHypelinePolling) })
+                report.publicTypes &= type.Assembly.GetName().Name == "Muxy.Hypeline";
             var metadata = new MGW_GameMetadata { GameName = Text, GameLogo = "", Theme = "" };
             IntPtr memory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MGW_GameMetadata)));
             bool initialized = false;

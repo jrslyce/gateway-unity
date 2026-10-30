@@ -1,5 +1,5 @@
 {
-    "name": "Muxy.Gateway",
+    "name": "Muxy.Hypeline",
     "rootNamespace": "",
     "references": [
         "UnityEngine.UI"

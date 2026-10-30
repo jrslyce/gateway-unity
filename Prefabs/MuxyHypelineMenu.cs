@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using MuxyGateway;
+using MuxyHypeline;
 
 /// <summary>Creator-facing Hypeline menu and Twitch connection panel.</summary>
 public class MuxyHypelineMenu : MonoBehaviour
 {
     [InspectorName("Hypeline Manager")]
-    public MuxyHypelineManager GatewayManager;
+    [UnityEngine.Serialization.FormerlySerializedAs("GatewayManager")] public MuxyHypelineManager HypelineManager;
     public Texture2D FoxArtwork;
     public Texture2D WordmarkArtwork;
     [TextArea] public string GameDescription = "Let your live audience interact with your game on Twitch and TikTok.";
@@ -113,17 +113,17 @@ public class MuxyHypelineMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (GatewayManager != null) GatewayManager.OnAuthentication.AddListener(AuthenticationFinished);
+        if (HypelineManager != null) HypelineManager.OnAuthentication.AddListener(AuthenticationFinished);
     }
 
     private void OnDisable()
     {
-        if (GatewayManager != null) GatewayManager.OnAuthentication.RemoveListener(AuthenticationFinished);
+        if (HypelineManager != null) HypelineManager.OnAuthentication.RemoveListener(AuthenticationFinished);
     }
 
     private void Update()
     {
-        if (requested && (GatewayManager == null || !GatewayManager.IsAuthenticated()) && Time.realtimeSinceStartup >= authenticationDeadline)
+        if (requested && (HypelineManager == null || !HypelineManager.IsAuthenticated()) && Time.realtimeSinceStartup >= authenticationDeadline)
         {
             requested = false;
             authenticationTimedOut = true;
@@ -133,14 +133,14 @@ public class MuxyHypelineMenu : MonoBehaviour
         }
         string status;
         Color color;
-        if (GatewayManager == null) { status = "Setup required"; color = ErrorColor; }
-        else if (GatewayManager.TransportState == GatewayTransportState.Error || authError)
+        if (HypelineManager == null) { status = "Setup required"; color = ErrorColor; }
+        else if (HypelineManager.TransportState == HypelineTransportState.Error || authError)
         { status = "Connection issue"; color = ErrorColor; }
-        else if (GatewayManager.TransportState == GatewayTransportState.Reconnecting)
+        else if (HypelineManager.TransportState == HypelineTransportState.Reconnecting)
         { status = "Reconnecting..."; color = ConnectingColor; }
-        else if (GatewayManager.TransportState == GatewayTransportState.Connected && GatewayManager.IsAuthenticated())
+        else if (HypelineManager.TransportState == HypelineTransportState.Connected && HypelineManager.IsAuthenticated())
         { status = "Connected"; color = ConnectedColor; requested = false; }
-        else if (requested || GatewayManager.TransportState == GatewayTransportState.Connecting || GatewayManager.TransportState == GatewayTransportState.Connected)
+        else if (requested || HypelineManager.TransportState == HypelineTransportState.Connecting || HypelineManager.TransportState == HypelineTransportState.Connected)
         { status = "Connecting..."; color = ConnectingColor; }
         else { status = "Not connected"; color = DisconnectedColor; }
 
@@ -170,12 +170,12 @@ public class MuxyHypelineMenu : MonoBehaviour
             else if (status == "Setup required") message.text = "Assign the Hypeline Manager in the Inspector.";
         }
         if (requested && status == "Connecting...")
-            message.text = GatewayManager.TransportState == GatewayTransportState.Connected
+            message.text = HypelineManager.TransportState == HypelineTransportState.Connected
                 ? "Connected to the service; waiting for Twitch authentication."
                 : "Opening the connection to the service...";
-        connectButton.interactable = GatewayManager != null && !authenticationTimedOut && status != "Connected" && status != "Connecting..." && status != "Reconnecting...";
-        bool canReset = GatewayManager != null && status == "Connection issue";
-        disconnectButton.interactable = GatewayManager != null && (status == "Connected" || status == "Reconnecting..." || canReset);
+        connectButton.interactable = HypelineManager != null && !authenticationTimedOut && status != "Connected" && status != "Connecting..." && status != "Reconnecting...";
+        bool canReset = HypelineManager != null && status == "Connection issue";
+        disconnectButton.interactable = HypelineManager != null && (status == "Connected" || status == "Reconnecting..." || canReset);
         var disconnectLabel = disconnectButton.GetComponentInChildren<UnityEngine.UI.Text>();
         if (disconnectLabel != null) disconnectLabel.text = canReset ? "Try again" : "Disconnect";
     }
@@ -216,15 +216,15 @@ public class MuxyHypelineMenu : MonoBehaviour
         requested = true;
         authenticationDeadline = Time.realtimeSinceStartup + AuthenticationTimeoutSeconds;
         message.text = "Connecting to Twitch...";
-        GatewayManager.AuthenticateWithPIN(pin);
+        HypelineManager.AuthenticateWithPIN(pin);
         code.text = "";
     }
 
     private void Disconnect()
     {
-        if (GatewayManager.IsAuthenticated()) GatewayManager.Deauthenticate();
-        else GatewayManager.ClearSavedSession();
-        GatewayManager.ResetConnection();
+        if (HypelineManager.IsAuthenticated()) HypelineManager.Deauthenticate();
+        else HypelineManager.ClearSavedSession();
+        HypelineManager.ResetConnection();
         requested = false;
         authError = false;
         authenticationTimedOut = false;

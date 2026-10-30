@@ -1,7 +1,0 @@
-{
-    "name": "Muxy.Gateway.Editor",
-    "rootNamespace": "",
-    "references": ["Muxy.Gateway"],
-    "includePlatforms": ["Editor"],
-    "autoReferenced": true
-}

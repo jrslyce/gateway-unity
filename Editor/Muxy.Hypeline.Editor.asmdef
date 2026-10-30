@@ -1,0 +1,11 @@
+{
+    "name": "Muxy.Hypeline.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Muxy.Hypeline"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "autoReferenced": true
+}

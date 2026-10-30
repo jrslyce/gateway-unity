@@ -53,25 +53,24 @@ Write-FixtureFile 'Packages/manifest.json' ($manifest | ConvertTo-Json -Depth 5)
 Write-FixtureFile 'Assets/Consumer/Gateway.PackageConsumer.asmdef' @'
 {
     "name": "Gateway.PackageConsumer",
-    "references": ["Muxy.Gateway"],
+    "references": ["Muxy.Hypeline"],
     "autoReferenced": true
 }
 '@
 Write-FixtureFile 'Assets/Consumer/GatewayPackageConsumer.cs' @'
 using System;
-using MuxyGateway;
+using MuxyHypeline;
 
 public static class GatewayPackageConsumer
 {
     public static readonly Type[] PublicTypes =
     {
         typeof(SDK),
-        typeof(MuxyHypeline.SDK),
         typeof(GameMetadata),
-        typeof(MuxyGatewayManager),
-        typeof(MuxyGatewayAuthentication),
-        typeof(MuxyGatewayPolling),
-        typeof(MuxyGatewayNotificationHistory)
+        typeof(MuxyHypelineManager),
+        typeof(MuxyHypelinePolling),
+        typeof(MuxyHypelineMenu),
+        typeof(MuxyHypelineInteractionAlert)
     };
 }
 '@
@@ -80,7 +79,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using MuxyGateway.Imports.Schema;
+using MuxyHypeline.Imports.Schema;
 using UnityEditor;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 using UnityEngine;
@@ -91,15 +90,12 @@ public static class GatewayPackageImportValidation
     {
         try
         {
-            if (GatewayPackageConsumer.PublicTypes.Length != 7)
+            if (GatewayPackageConsumer.PublicTypes.Length != 6)
                 throw new InvalidOperationException("Consumer assembly references were not loaded.");
-
-            if (!typeof(MuxyGateway.SDK).IsAssignableFrom(typeof(MuxyHypeline.SDK)))
-                throw new InvalidOperationException("Hypeline SDK must retain Gateway SDK compatibility.");
 
             foreach (Type type in GatewayPackageConsumer.PublicTypes)
             {
-                if (type.Assembly.GetName().Name != "Muxy.Gateway")
+                if (type.Assembly.GetName().Name != "Muxy.Hypeline")
                     throw new InvalidOperationException("Public type moved assembly: " + type.FullName);
             }
 
@@ -107,7 +103,7 @@ public static class GatewayPackageImportValidation
             if (uiProvider == null)
                 throw new InvalidOperationException("UI package providers were not resolved.");
 
-            foreach (string prefabName in new[] { "MuxyGatewayAuthenticateUI", "MuxyGatewayPolling", "MuxyGatewayNotifications", "MuxyHypelineMenu", "MuxyHypelineInteractionAlert" })
+            foreach (string prefabName in new[] { "MuxyHypelineManager", "MuxyHypelinePolling", "MuxyHypelineMenu", "MuxyHypelineInteractionAlert" })
             {
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Packages/com.muxy.gateway/Prefabs/" + prefabName + ".prefab");
                 if (prefab == null) throw new InvalidOperationException("Missing prefab: " + prefabName);
@@ -122,7 +118,7 @@ public static class GatewayPackageImportValidation
             }
 
             ValidateUtf8Marshalling();
-            Type linker = Type.GetType("MuxyGateway.Editor.GatewayLinkerProcessor, Muxy.Gateway.Editor");
+            Type linker = Type.GetType("MuxyHypeline.Editor.HypelineLinkerProcessor, Muxy.Hypeline.Editor");
             if (linker == null || !typeof(UnityEditor.Build.IUnityLinkerProcessor).IsAssignableFrom(linker))
                 throw new InvalidOperationException("Package linker callback was not registered.");
 
@@ -130,7 +126,7 @@ public static class GatewayPackageImportValidation
             File.WriteAllLines(Path.Combine(Application.dataPath, "../package-import-result.txt"), new[]
             {
                 "unity=" + Application.unityVersion,
-                "sdkAssembly=Muxy.Gateway",
+                "sdkAssembly=Muxy.Hypeline",
                 "consumerAssembly=" + typeof(GatewayPackageConsumer).Assembly.GetName().Name,
                 "uiProvider=" + uiProvider.name + "@" + uiProvider.version,
                 "utf8StructMarshalling=passed",
@@ -239,7 +235,7 @@ foreach ($dependency in $lock.dependencies.PSObject.Properties) {
 }
 $sourceHashes = @{}
 $sourceFiles = @(Get-ChildItem -LiteralPath (Join-Path $packageRoot 'Runtime'), (Join-Path $packageRoot 'Prefabs'), (Join-Path $packageRoot 'Editor') -Filter '*.cs' -Recurse)
-$sourceFiles += Get-Item -LiteralPath (Join-Path $packageRoot 'package.json'), (Join-Path $packageRoot 'Muxy.Gateway.asmdef')
+$sourceFiles += Get-Item -LiteralPath (Join-Path $packageRoot 'package.json'), (Join-Path $packageRoot 'Muxy.Hypeline.asmdef')
 foreach ($sourceFile in $sourceFiles) {
     $relativePath = $sourceFile.FullName.Substring($packageRoot.Length + 1).Replace('\', '/')
     $sourceHashes[$relativePath] = (Get-FileHash -LiteralPath $sourceFile.FullName -Algorithm SHA256).Hash

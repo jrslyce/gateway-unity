@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d93b5878424328ae3095801eec87e1, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  GatewayManager: {fileID: 0}
+  HypelineManager: {fileID: 0}
   FoxArtwork: {fileID: 2800000, guid: a7d22486f4463e657bd2f2f6d76e2782, type: 3}
   WordmarkArtwork: {fileID: 2800000, guid: 1bbebd9c6d7044aa855432c2b28a713c, type: 3}
   GameDescription: Let your live audience interact with your game on Twitch and TikTok.

@@ -1,7 +1,7 @@
 // Copied into a disposable Unity project's Editor folder by the validation harness.
 using System;
 using System.IO;
-using MuxyGateway;
+using MuxyHypeline;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,7 +40,7 @@ public static class GatewayLogoSampleValidation
             demoObject.SetActive(false);
             logo = new GameObject("Logo");
             demo = demoObject.AddComponent<MockLogoDemo>();
-            demo.GatewayManager = manager;
+            demo.HypelineManager = manager;
             demo.LogoObject = logo;
             demo.DisplaySeconds = 0.15f;
             demoObject.SetActive(true);

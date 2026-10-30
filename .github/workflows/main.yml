@@ -15,22 +15,22 @@ jobs:
 
       - name: Update Version
         run: |
-          echo "// This file is auto-generated. Do not modify." > ./Runtime/MuxyGatewayVersion.cs
-          echo "namespace MuxyGateway" >> ./Runtime/MuxyGatewayVersion.cs
-          echo "{" >> ./Runtime/MuxyGatewayVersion.cs
-          echo "    class Constants { public const string Version = \"${{ github.ref_name }}\"; }" >> ./Runtime/MuxyGatewayVersion.cs
-          echo "}" >> ./Runtime/MuxyGatewayVersion.cs
-          cat ./Runtime/MuxyGatewayVersion.cs
-          mkdir .MuxyGateway
-          cp -r * .MuxyGateway/
-          mv .MuxyGateway MuxyGateway
-          zip -r "MuxyGateway-${{github.ref_name}}.zip" MuxyGateway/* -x ".git/*" ".github/*"
+          echo "// This file is auto-generated. Do not modify." > ./Runtime/HypelineVersion.cs
+          echo "namespace MuxyHypeline" >> ./Runtime/HypelineVersion.cs
+          echo "{" >> ./Runtime/HypelineVersion.cs
+          echo "    class Constants { public const string Version = \"${{ github.ref_name }}\"; }" >> ./Runtime/HypelineVersion.cs
+          echo "}" >> ./Runtime/HypelineVersion.cs
+          cat ./Runtime/HypelineVersion.cs
+          mkdir .MuxyHypeline
+          cp -r * .MuxyHypeline/
+          mv .MuxyHypeline MuxyHypeline
+          zip -r "MuxyHypeline-${{github.ref_name}}.zip" MuxyHypeline/* -x ".git/*" ".github/*"
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          name: Gamelink ${{ github.ref_name }}
+          name: Muxy Hypeline ${{ github.ref_name }}
           allowUpdates: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
-          artifacts: "MuxyGateway-${{github.ref_name}}.zip"
+          artifacts: "MuxyHypeline-${{github.ref_name}}.zip"

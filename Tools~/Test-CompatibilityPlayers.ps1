@@ -34,7 +34,7 @@ $hashes=@{}
 foreach ($file in @(Get-ChildItem -LiteralPath (Join-Path $packageRoot 'Runtime'),(Join-Path $packageRoot 'Prefabs'),(Join-Path $packageRoot 'Editor') -Recurse -File | Where-Object Extension -In @('.cs','.asmdef','.dll','.meta'))) {
     $hashes[$file.FullName.Substring($packageRoot.Length+1).Replace('\','/')]=(Get-FileHash -LiteralPath $file.FullName).Hash
 }
-foreach ($relative in @('package.json','Muxy.Gateway.asmdef','Editor.meta')) { $hashes[$relative]=(Get-FileHash -LiteralPath (Join-Path $packageRoot $relative)).Hash }
+foreach ($relative in @('package.json','Muxy.Hypeline.asmdef','Editor.meta')) { $hashes[$relative]=(Get-FileHash -LiteralPath (Join-Path $packageRoot $relative)).Hash }
 $identity=@{sdkCommit=(& git -C $packageRoot rev-parse HEAD).Trim();unityVersion=$UnityVersion;timestampUtc=[DateTime]::UtcNow.ToString('o');sourceSha256=$hashes;runtimeProbeSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'GatewayCompatibilityPlayerValidation.cs')).Hash;buildProbeSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'GatewayPlayerBuildValidation.cs')).Hash;scope='compatibility-only-High-stripping-build-and-native-utf8-configuration-smoke'}
 [IO.File]::WriteAllText((Join-Path $output 'source-identity.json'),($identity|ConvertTo-Json -Depth 10),$utf8)
 $settings=Join-Path $root ('build-settings-'+$UnityVersion+'.json')
@@ -60,5 +60,5 @@ foreach ($backend in $Backends) {
     Write-Host "$UnityVersion ${backend}: build and native UTF-8/configuration smoke passed"
 }
 foreach ($relative in $hashes.Keys) { if ((Get-FileHash -LiteralPath (Join-Path $packageRoot $relative)).Hash -ne $hashes[$relative]) { throw 'SDK source changed during validation.' } }
-$descriptor=Join-Path $project 'Library/MuxyGateway/link.xml'
+$descriptor=Join-Path $project 'Library/MuxyHypeline/link.xml'
 if (Test-Path -LiteralPath $descriptor) { Copy-Item -LiteralPath $descriptor -Destination (Join-Path $output 'generated-link.xml') }

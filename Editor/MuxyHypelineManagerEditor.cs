@@ -27,7 +27,7 @@ public sealed class MuxyHypelineManagerEditor : Editor
             TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
             if (importer != null && !importer.isReadable)
                 EditorGUILayout.HelpBox("Game Logo needs Read/Write Enabled in its texture import settings. The runtime also requires RGB24, RGBA32, or ARGB32; use an uncompressed compatible format.", MessageType.Warning);
-            else if (!MuxyGateway.SDK.IsCompatibleFormat(texture.format))
+            else if (!MuxyHypeline.SDK.IsCompatibleFormat(texture.format))
                 EditorGUILayout.HelpBox("Game Logo must use RGB24, RGBA32, or ARGB32 at runtime. Set a compatible uncompressed texture format in the import settings.", MessageType.Warning);
         }
 

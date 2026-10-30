@@ -3,17 +3,17 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.UnityLinker;
 
-namespace MuxyGateway.Editor
+namespace MuxyHypeline.Editor
 {
     // Package link.xml files are not consumed by all supported Unity versions.
     // Register a generated descriptor through the supported build callback.
-    public sealed class GatewayLinkerProcessor : IUnityLinkerProcessor
+    public sealed class HypelineLinkerProcessor : IUnityLinkerProcessor
     {
         public int callbackOrder { get { return 0; } }
 
         public string GenerateAdditionalLinkXmlFile(BuildReport report, UnityLinkerBuildPipelineData data)
         {
-            string directory = Path.GetFullPath(Path.Combine("Library", "MuxyGateway"));
+            string directory = Path.GetFullPath(Path.Combine("Library", "MuxyHypeline"));
             Directory.CreateDirectory(directory);
             string path = Path.Combine(directory, "link.xml");
             // Mono's TLS path initializes ServicePointManager, which creates

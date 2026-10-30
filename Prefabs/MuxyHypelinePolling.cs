@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MuxyGateway;
+using MuxyHypeline;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [UnityEngine.Scripting.APIUpdating.MovedFrom(true, null, "Muxy.Gateway", "MuxyGatewayPolling")]
 public class MuxyHypelinePolling : MonoBehaviour
 {
-    [InspectorName("Hypeline Manager")] public MuxyHypelineManager GatewayManager;
+    [InspectorName("Hypeline Manager")] [UnityEngine.Serialization.FormerlySerializedAs("GatewayManager")] public MuxyHypelineManager HypelineManager;
     [Tooltip("Optional Hypeline wordmark displayed at the top of the poll.")] public Texture2D WordmarkArtwork;
     [Tooltip("Offset from the upper-right corner in reference-resolution pixels.")] public Vector2 Position = new Vector2(-48, -72);
     public float WinnerPauseDuration = 3f;
@@ -37,17 +37,17 @@ public class MuxyHypelinePolling : MonoBehaviour
         if (oldCanvas != null) oldCanvas.gameObject.SetActive(false);
         BuildUI();
     }
-    protected void OnEnable() { if (GatewayManager != null) GatewayManager.OnPollUpdate.AddListener(OnPollUpdate); }
+    protected void OnEnable() { if (HypelineManager != null) HypelineManager.OnPollUpdate.AddListener(OnPollUpdate); }
     protected void OnDisable()
     {
-        if (GatewayManager != null) GatewayManager.OnPollUpdate.RemoveListener(OnPollUpdate);
+        if (HypelineManager != null) HypelineManager.OnPollUpdate.RemoveListener(OnPollUpdate);
         HidePrompt();
     }
     public void ShowPrompt()
     {
-        if (GatewayManager == null) { Debug.LogWarning("Hypeline poll needs a Hypeline Manager reference for live updates.", this); return; }
+        if (HypelineManager == null) { Debug.LogWarning("Hypeline poll needs a Hypeline Manager reference for live updates.", this); return; }
         testing = false;
-        ShowConfiguration(GatewayManager.GetPollConfiguration());
+        ShowConfiguration(HypelineManager.GetPollConfiguration());
     }
     public void HidePrompt()
     {
@@ -56,8 +56,8 @@ public class MuxyHypelinePolling : MonoBehaviour
     }
     private void OnPollUpdate(PollUpdate update)
     {
-        if (update == null || GatewayManager == null) return;
-        if (!isActive || testing || (final && !update.IsFinal) || current != GatewayManager.GetPollConfiguration()) ShowPrompt();
+        if (update == null || HypelineManager == null) return;
+        if (!isActive || testing || (final && !update.IsFinal) || current != HypelineManager.GetPollConfiguration()) ShowPrompt();
         if (!isActive) return;
         ApplyResults(update.Results, update.IsFinal, update.Winner, false);
     }

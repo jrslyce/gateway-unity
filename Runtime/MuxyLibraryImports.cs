@@ -1,9 +1,9 @@
-using MuxyGateway.Imports.Schema;
+using MuxyHypeline.Imports.Schema;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using System;
 
-namespace MuxyGateway.Imports
+namespace MuxyHypeline.Imports
 {
     // StringPtr should be made into MGL_String
     using StringPtr = System.IntPtr;

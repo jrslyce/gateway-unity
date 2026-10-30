@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using MuxyGateway;
+using MuxyHypeline;
 using UnityEngine.Events;
 
 
@@ -20,22 +20,22 @@ public class MuxyHypelineManager : MonoBehaviour
     [SerializeField] private List<GameAction> GameActions = new List<GameAction>();
     [SerializeField] private List<GameText> GameTexts = new List<GameText>();
     [SerializeField] private PollConfiguration PollConfiguration = new PollConfiguration();
-    public MuxyGatewayPollUpdate OnPollUpdate = new MuxyGatewayPollUpdate();
+    public MuxyHypelinePollUpdate OnPollUpdate = new MuxyHypelinePollUpdate();
 
     [Header("Events")]
-    public MuxyGatewayAuthenticationEvent OnAuthentication = new MuxyGatewayAuthenticationEvent();
-    public MuxyGatewayGameActionUsedEvent OnAnyGameActionUsed = new MuxyGatewayGameActionUsedEvent();
-    public MuxyGatewayBitsUsedEvent OnBitsUsed = new MuxyGatewayBitsUsedEvent();
-    public GatewayTransportStateEvent OnTransportStateChanged = new GatewayTransportStateEvent();
+    public MuxyHypelineAuthenticationEvent OnAuthentication = new MuxyHypelineAuthenticationEvent();
+    public MuxyHypelineGameActionUsedEvent OnAnyGameActionUsed = new MuxyHypelineGameActionUsedEvent();
+    public MuxyHypelineBitsUsedEvent OnBitsUsed = new MuxyHypelineBitsUsedEvent();
+    public HypelineTransportStateEvent OnTransportStateChanged = new HypelineTransportStateEvent();
 
     [Serializable]
-    public class MuxyGatewayAuthenticationEvent : UnityEvent<AuthenticationResponse> { }
+    public class MuxyHypelineAuthenticationEvent : UnityEvent<AuthenticationResponse> { }
     [Serializable]
-    public class MuxyGatewayBitsUsedEvent : UnityEvent<BitsUsed> { }
+    public class MuxyHypelineBitsUsedEvent : UnityEvent<BitsUsed> { }
     [Serializable]
-    public class MuxyGatewayPollUpdate : UnityEvent<PollUpdate> { }
+    public class MuxyHypelinePollUpdate : UnityEvent<PollUpdate> { }
     [Serializable]
-    public class GatewayTransportStateEvent : UnityEvent<GatewayTransportState> { }
+    public class HypelineTransportStateEvent : UnityEvent<HypelineTransportState> { }
 
 
     // Private //
@@ -48,7 +48,7 @@ public class MuxyHypelineManager : MonoBehaviour
     private SDK.OnBitsUsedDelegate BitsCB;
 
     private bool DidOpenAndRun = false;
-    private GatewayTransportState lastTransportState = GatewayTransportState.Disconnected;
+    private HypelineTransportState lastTransportState = HypelineTransportState.Disconnected;
     private float pinStartedAt = -1f;
     private float transportStartedAt = -1f;
     private int connectionGeneration;
@@ -140,7 +140,7 @@ public class MuxyHypelineManager : MonoBehaviour
     public void OpenAndRunSDK()
     {
         if (DidOpenAndRun) return;
-        if (SDK.TransportState == GatewayTransportState.Error)
+        if (SDK.TransportState == HypelineTransportState.Error)
         {
             ResetConnection();
         }
@@ -153,23 +153,23 @@ public class MuxyHypelineManager : MonoBehaviour
     protected void Update()
     {
         if (SDK == null) return;
-        GatewayTransportState state = SDK.TransportState;
+        HypelineTransportState state = SDK.TransportState;
         if (state != lastTransportState)
         {
             lastTransportState = state;
-            if (state == GatewayTransportState.Connected && transportStartedAt >= 0f)
+            if (state == HypelineTransportState.Connected && transportStartedAt >= 0f)
             {
                 Debug.Log("Hypeline: Connection transport opened after " + (Time.realtimeSinceStartup - transportStartedAt).ToString("F1") + " seconds.");
                 transportStartedAt = -1f;
             }
-            if (state == GatewayTransportState.Error)
+            if (state == HypelineTransportState.Error)
                 Debug.LogWarning("Hypeline: Connection transport failed. Check the network and earlier transport warnings.");
             else
                 Debug.Log("Hypeline: Connection transport is " + state + ".");
             OnTransportStateChanged.Invoke(state);
             if (SDK == null) return;
         }
-        if (SDK.TransportState == GatewayTransportState.Error) DidOpenAndRun = false;
+        if (SDK.TransportState == HypelineTransportState.Error) DidOpenAndRun = false;
         SDK.Update();
     }
 
@@ -180,7 +180,7 @@ public class MuxyHypelineManager : MonoBehaviour
         SDK previous = SDK;
         SDK = null;
         DidOpenAndRun = false;
-        lastTransportState = GatewayTransportState.Disconnected;
+        lastTransportState = HypelineTransportState.Disconnected;
         pinStartedAt = -1f;
         transportStartedAt = -1f;
         if (previous != null) previous.StopWebsocketTransport();
@@ -212,9 +212,9 @@ public class MuxyHypelineManager : MonoBehaviour
         PlayerPrefs.DeleteKey(PLAYER_PREFS_REFRESH_TOKEN);
     }
 
-    public GatewayTransportState TransportState
+    public HypelineTransportState TransportState
     {
-        get { return SDK == null ? GatewayTransportState.Disconnected : SDK.TransportState; }
+        get { return SDK == null ? HypelineTransportState.Disconnected : SDK.TransportState; }
     }
 
     public void Deauthenticate()
@@ -328,7 +328,7 @@ public class MuxyHypelineManager : MonoBehaviour
             }
             catch (Exception exception)
             {
-                Debug.LogError("Muxy Gateway logo could not be encoded. Enable Read/Write and use RGB24, RGBA32, or ARGB32 on the texture. " + exception.Message);
+                Debug.LogError("Hypeline logo could not be encoded. Enable Read/Write and use RGB24, RGBA32, or ARGB32 on the texture. " + exception.Message);
             }
         }
 #endif
