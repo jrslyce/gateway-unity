@@ -8,7 +8,7 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
 {
     [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
-    [Tooltip("Optional wordmark displayed beside each alert.")]
+    [Tooltip("Optional Muxy logo displayed beside each alert.")]
     public Texture2D WordmarkArtwork;
     [Tooltip("Offset from the upper-right corner, in reference-resolution pixels.")]
     public Vector2 Position = new Vector2(-48, -220);
@@ -127,14 +127,14 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
     {
         string viewer = string.IsNullOrWhiteSpace(viewerName) ? "A viewer" : viewerName.Trim();
         string action = string.IsNullOrWhiteSpace(actionName) ? "an interaction" : actionName.Trim();
-        Alert alert = MakeAlert(viewer + " sent\n" + action);
+        Alert alert = MakeAlert(viewer + " sent\n" + action, category);
         alerts.Insert(0, alert);
         alert.rect.SetAsLastSibling();
         LayoutAlerts();
         if (PlaySounds) PlayCategorySound(category);
     }
 
-    private Alert MakeAlert(string text)
+    private Alert MakeAlert(string text, GameActionCategory category)
     {
         GameObject card = new GameObject("Interaction Alert", typeof(RectTransform), typeof(Image), typeof(CanvasGroup));
         RectTransform rect = card.GetComponent<RectTransform>();
@@ -164,7 +164,7 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
         float logoWidth = WordmarkArtwork != null ? Mathf.Clamp(Size.x * 0.28f, 0f, 132f) : 0f;
         if (WordmarkArtwork != null && logoWidth > 0f)
         {
-            GameObject logo = new GameObject("Hypeline wordmark", typeof(RectTransform), typeof(RawImage));
+            GameObject logo = new GameObject("Muxy logo", typeof(RectTransform), typeof(RawImage));
             RectTransform logoRect = logo.GetComponent<RectTransform>();
             logoRect.SetParent(rect, false);
             logoRect.anchorMin = logoRect.anchorMax = new Vector2(0, 0.5f);
@@ -176,6 +176,9 @@ public class MuxyHypelineInteractionAlert : MonoBehaviour
             logoRect.sizeDelta = new Vector2(logoWidth, logoHeight);
             RawImage logoImage = logo.GetComponent<RawImage>();
             logoImage.texture = WordmarkArtwork;
+            logoImage.color = category == GameActionCategory.Help ? new Color(.30f, .86f, .52f) :
+                              category == GameActionCategory.Hinder ? new Color(1f, .36f, .34f) :
+                              new Color(.72f, .50f, .96f);
             logoImage.raycastTarget = false;
         }
 
