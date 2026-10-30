@@ -8,6 +8,7 @@ using MuxyGateway;
 /// <summary>Creator-facing Hypeline menu and Twitch connection panel.</summary>
 public class MuxyHypelineMenu : MonoBehaviour
 {
+    [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
     public Texture2D FoxArtwork;
     public Texture2D WordmarkArtwork;

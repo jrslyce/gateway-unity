@@ -7,7 +7,8 @@ using MuxyGateway;
 
 public class MuxyGatewayNotificationHistory : MonoBehaviour
 {
-    [Header("Muxy Gateway Manager")]
+    [Header("Hypeline Manager")]
+    [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
 
     [Header("Settings")]

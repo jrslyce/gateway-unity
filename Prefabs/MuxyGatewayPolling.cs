@@ -8,7 +8,8 @@ using UnityEngine.UI;
 
 public class MuxyGatewayPolling : MonoBehaviour
 {
-    [Header("Muxy Gateway Manager")]
+    [Header("Hypeline Manager")]
+    [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
 
     public float WinnerPauseDuration = 3.0f;

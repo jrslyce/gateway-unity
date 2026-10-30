@@ -6,6 +6,7 @@ using UnityEngine.UI;
 /// <summary>Displays viewer action receipts without performing the game effect.</summary>
 public class MuxyHypelineInteractionAlert : MonoBehaviour
 {
+    [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
     [Tooltip("Optional wordmark displayed beside each alert.")]
     public Texture2D WordmarkArtwork;

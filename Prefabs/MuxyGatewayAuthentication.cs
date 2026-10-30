@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class MuxyGatewayAuthentication : MonoBehaviour
 {
-    [Header("Muxy Gateway Manager")]
+    [Header("Hypeline Manager")]
+    [InspectorName("Hypeline Manager")]
     public MuxyGatewayManager GatewayManager;
 
     private InputField PINInput;

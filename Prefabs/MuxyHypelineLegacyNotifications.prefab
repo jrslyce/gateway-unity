@@ -1332,7 +1332,7 @@ GameObject:
   - component: {fileID: 1588239893849136309}
   - component: {fileID: 7079053997630257096}
   m_Layer: 0
-  m_Name: MuxyGatewayNotifications
+  m_Name: MuxyHypelineLegacyNotifications
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

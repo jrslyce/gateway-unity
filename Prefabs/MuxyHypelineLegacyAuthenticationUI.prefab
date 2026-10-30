@@ -1317,7 +1317,7 @@ GameObject:
   - component: {fileID: 7985427510131431940}
   - component: {fileID: 2102921156662415519}
   m_Layer: 0
-  m_Name: MuxyGatewayAuthenticateUI
+  m_Name: MuxyHypelineLegacyAuthenticationUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

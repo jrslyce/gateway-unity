@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class MuxyGatewayManager : MonoBehaviour
 {
 
-    [Header("Game ID")]
+    [HideInInspector]
     public String GameID = "gamelink-testing";
 
     [SerializeField] private GameMetadata GameMetadata = new GameMetadata();

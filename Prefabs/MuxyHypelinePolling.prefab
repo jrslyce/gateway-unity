@@ -2382,7 +2382,7 @@ GameObject:
   - component: {fileID: 4856730941032631326}
   - component: {fileID: 2339833812286743674}
   m_Layer: 0
-  m_Name: MuxyGatewayPolling
+  m_Name: MuxyHypelinePolling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

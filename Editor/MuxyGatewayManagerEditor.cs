@@ -8,15 +8,11 @@ public sealed class MuxyGatewayManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         if (PrefabUtility.IsPartOfImmutablePrefab(target))
-            EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyGatewayManager into the scene, select it in the Hierarchy, and expand Game Metadata to edit it.", MessageType.Info);
+            EditorGUILayout.HelpBox("This package prefab is read-only. Drag MuxyHypelineManager into the scene, select it in the Hierarchy, and expand Game Metadata to edit it.", MessageType.Info);
 
         serializedObject.Update();
         DrawDefaultInspector();
         serializedObject.Update();
-
-        SerializedProperty gameId = serializedObject.FindProperty("GameID");
-        if (gameId != null && string.IsNullOrWhiteSpace(gameId.stringValue))
-            EditorGUILayout.HelpBox("Enter the exact Game ID listed under Linked Games in the broadcaster's Twitch extension configuration before entering Play mode.", MessageType.Warning);
 
         SerializedProperty metadata = serializedObject.FindProperty("GameMetadata");
         SerializedProperty name = metadata == null ? null : metadata.FindPropertyRelative("Name");

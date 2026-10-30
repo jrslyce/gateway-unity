@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3335976728011701588}
   - component: {fileID: 1432649689203300629}
   m_Layer: 0
-  m_Name: MuxyGatewayManager
+  m_Name: MuxyHypelineManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
