@@ -17,7 +17,7 @@ public static class GatewayLogoSampleValidation
 {
     private static MockLogoDemo demo;
     private static GameObject logo;
-    private static MuxyGatewayManager manager;
+    private static MuxyHypelineManager manager;
     private static double start;
 
     public static void Run()
@@ -35,7 +35,7 @@ public static class GatewayLogoSampleValidation
         {
             var managerObject = new GameObject("Manager");
             managerObject.SetActive(false);
-            manager = managerObject.AddComponent<MuxyGatewayManager>();
+            manager = managerObject.AddComponent<MuxyHypelineManager>();
             var demoObject = new GameObject("Demo");
             demoObject.SetActive(false);
             logo = new GameObject("Logo");

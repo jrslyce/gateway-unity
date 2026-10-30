@@ -129,7 +129,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             authenticationTimedOut = true;
             authError = true;
             lastStatus = null;
-            Debug.LogWarning("Hypeline: No Twitch authentication response after 8 seconds. A response may still arrive; restart Play mode and request a new code before retrying.");
+            Debug.LogWarning("Hypeline: No Twitch authentication response after 8 seconds. Select Try again to reset the connection, then request a new code.");
         }
         string status;
         Color color;
@@ -164,7 +164,7 @@ public class MuxyHypelineMenu : MonoBehaviour
             if (status == "Connected") message.text = "Twitch is ready.";
             else if (status == "Not connected") message.text = "Follow the steps above to connect Twitch.";
             else if (status == "Connection issue") message.text = authenticationTimedOut
-                ? "No response yet. Restart Play mode and get a new code to retry."
+                ? "No response yet. Select Try again, then get a new code."
                 : "Could not connect. Check your internet connection or get a new code and try again.";
             else if (status == "Reconnecting...") message.text = "Trying to restore your connection.";
             else if (status == "Setup required") message.text = "Assign the Hypeline Manager in the Inspector.";
@@ -174,7 +174,10 @@ public class MuxyHypelineMenu : MonoBehaviour
                 ? "Connected to the service; waiting for Twitch authentication."
                 : "Opening the connection to the service...";
         connectButton.interactable = GatewayManager != null && !authenticationTimedOut && status != "Connected" && status != "Connecting..." && status != "Reconnecting...";
-        disconnectButton.interactable = GatewayManager != null && (status == "Connected" || status == "Reconnecting...");
+        bool canReset = GatewayManager != null && status == "Connection issue";
+        disconnectButton.interactable = GatewayManager != null && (status == "Connected" || status == "Reconnecting..." || canReset);
+        var disconnectLabel = disconnectButton.GetComponentInChildren<UnityEngine.UI.Text>();
+        if (disconnectLabel != null) disconnectLabel.text = canReset ? "Try again" : "Disconnect";
     }
 
     private void AuthenticationFinished(AuthenticationResponse response)
@@ -219,10 +222,15 @@ public class MuxyHypelineMenu : MonoBehaviour
 
     private void Disconnect()
     {
-        GatewayManager.Deauthenticate();
+        if (GatewayManager.IsAuthenticated()) GatewayManager.Deauthenticate();
+        else GatewayManager.ClearSavedSession();
+        GatewayManager.ResetConnection();
         requested = false;
         authError = false;
-        message.text = "Disconnected. Enter a new Twitch code to connect again.";
+        authenticationTimedOut = false;
+        lastStatus = null;
+        if (code != null) code.text = "";
+        message.text = "Connection reset. Enter a new Twitch code to connect.";
     }
 
     private void OpenTwitchSetup() { Application.OpenURL(TwitchSetupUrl); }

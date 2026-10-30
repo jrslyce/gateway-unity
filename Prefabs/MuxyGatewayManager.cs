@@ -50,21 +50,26 @@ public class MuxyGatewayManager : MonoBehaviour
     private GatewayTransportState lastTransportState = GatewayTransportState.Disconnected;
     private float pinStartedAt = -1f;
     private float transportStartedAt = -1f;
+    private int connectionGeneration;
 
     private void SetupCallbacks()
     {
+        int generation = connectionGeneration;
         ActionCB = (Used) =>
         {
+            if (generation != connectionGeneration) return;
             OnAnyGameActionUsed.Invoke(Used);
         };
 
         BitsCB = (Used) =>
         {
+            if (generation != connectionGeneration) return;
             OnBitsUsed.Invoke(Used);
         };
 
         AuthCB = (Response) =>
         {
+            if (generation != connectionGeneration) return;
             if (pinStartedAt >= 0f)
             {
                 Debug.Log("Hypeline: Authentication response received after " + (Time.realtimeSinceStartup - pinStartedAt).ToString("F1") + " seconds.");
@@ -104,8 +109,10 @@ public class MuxyGatewayManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
+        connectionGeneration++;
+        DidOpenAndRun = false;
         if (SDK != null)
         {
             SDK.StopWebsocketTransport();
@@ -113,7 +120,7 @@ public class MuxyGatewayManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         if (String.IsNullOrWhiteSpace(GameID)) GameID = "gamelink-testing";
         if (SDK == null)
@@ -134,9 +141,7 @@ public class MuxyGatewayManager : MonoBehaviour
         if (DidOpenAndRun) return;
         if (SDK.TransportState == GatewayTransportState.Error)
         {
-            SDK.StopWebsocketTransport();
-            SDK = new SDK(GameID);
-            SetupCallbacks();
+            ResetConnection();
         }
         transportStartedAt = Time.realtimeSinceStartup;
         Debug.Log("Hypeline: Starting the Twitch connection.");
@@ -144,7 +149,7 @@ public class MuxyGatewayManager : MonoBehaviour
         DidOpenAndRun = true;
     }
 
-    private void Update()
+    protected void Update()
     {
         if (SDK == null) return;
         GatewayTransportState state = SDK.TransportState;
@@ -165,6 +170,26 @@ public class MuxyGatewayManager : MonoBehaviour
         }
         if (SDK.TransportState == GatewayTransportState.Error) DidOpenAndRun = false;
         SDK.Update();
+    }
+
+    /// <summary>Abandons the current connection so a fresh attempt cannot receive stale callbacks.</summary>
+    public void ResetConnection()
+    {
+        connectionGeneration++;
+        SDK previous = SDK;
+        SDK = null;
+        DidOpenAndRun = false;
+        lastTransportState = GatewayTransportState.Disconnected;
+        pinStartedAt = -1f;
+        transportStartedAt = -1f;
+        if (previous != null) previous.StopWebsocketTransport();
+        if (isActiveAndEnabled)
+        {
+            if (String.IsNullOrWhiteSpace(GameID)) GameID = "gamelink-testing";
+            SDK = new SDK(GameID);
+            SetupCallbacks();
+        }
+        Debug.Log("Hypeline: Connection reset. Enter a new Twitch code to retry.");
     }
 
     public void AuthenticateWithPIN(String PIN)

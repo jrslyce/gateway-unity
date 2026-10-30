@@ -14,17 +14,17 @@ public class MuxyGatewayAuthentication : MonoBehaviour
     private GameObject PINGroup;
     private GameObject SuccessGroup;
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         GatewayManager.OnAuthentication.AddListener(OnAuthenticationAttempt);
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         GatewayManager.OnAuthentication.RemoveListener(OnAuthenticationAttempt);
     }
 
-    void Start()
+    protected void Start()
     {
         PINInput = this.transform.Find("Canvas/PINGroup/PINInput").GetComponent<InputField>();
         FailedAuthText = this.transform.Find("Canvas/FailedAuthText").GetComponent<Text>();

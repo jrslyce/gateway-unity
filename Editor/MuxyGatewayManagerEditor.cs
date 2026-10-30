@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MuxyGatewayManager))]
+[CustomEditor(typeof(MuxyGatewayManager), true)]
 public sealed class MuxyGatewayManagerEditor : Editor
 {
     public override void OnInspectorGUI()

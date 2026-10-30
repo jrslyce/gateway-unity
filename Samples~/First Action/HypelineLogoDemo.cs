@@ -6,7 +6,7 @@ using UnityEngine;
 // A deliberately small first action: show a scene object and acknowledge delivery.
 public class HypelineLogoDemo : MonoBehaviour
 {
-    public MuxyGatewayManager GatewayManager;
+    public MuxyHypelineManager GatewayManager;
     public GameObject LogoObject;
     public string ActionID = "show-muxy-logo";
     [Min(0.1f)] public float DisplaySeconds = 5f;

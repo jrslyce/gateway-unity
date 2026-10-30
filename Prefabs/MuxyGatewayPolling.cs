@@ -30,14 +30,14 @@ public class MuxyGatewayPolling : MonoBehaviour
     private static readonly Color FillColor = new Color(.20f, .38f, .35f, 1f);
     public bool IsTesting { get { return testing; } }
 
-    private void Awake()
+    protected void Awake()
     {
         Transform oldCanvas = transform.Find("Canvas");
         if (oldCanvas != null) oldCanvas.gameObject.SetActive(false);
         BuildUI();
     }
-    private void OnEnable() { if (GatewayManager != null) GatewayManager.OnPollUpdate.AddListener(OnPollUpdate); }
-    private void OnDisable()
+    protected void OnEnable() { if (GatewayManager != null) GatewayManager.OnPollUpdate.AddListener(OnPollUpdate); }
+    protected void OnDisable()
     {
         if (GatewayManager != null) GatewayManager.OnPollUpdate.RemoveListener(OnPollUpdate);
         HidePrompt();
@@ -129,7 +129,7 @@ public class MuxyGatewayPolling : MonoBehaviour
         for (int i = 0; i < sampleVotes.Length; i++) if (sampleVotes[i] > 0 && (winner < 0 || sampleVotes[i] > sampleVotes[winner])) winner = i;
         ApplyResults(sampleVotes, true, winner, true);
     }
-    private void Update()
+    protected void Update()
     {
         if (!isActive) return;
         if (final) { pause -= Time.unscaledDeltaTime; if (pause <= 0f) HidePrompt(); return; }

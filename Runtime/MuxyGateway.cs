@@ -188,6 +188,7 @@ namespace MuxyGateway
             try { await start; }
             catch (Exception exception)
             {
+                if (Transport.ConnectionState == GatewayTransportState.Disconnected) return;
 #if UNITY_EDITOR || UNITY_STANDALONE
                 Debug.LogWarning("Gateway transport could not start (" + exception.GetType().Name + ").");
 #else

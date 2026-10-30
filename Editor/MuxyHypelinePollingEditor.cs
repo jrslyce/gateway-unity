@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MuxyGatewayPolling))]
+[CustomEditor(typeof(MuxyGatewayPolling), true)]
 public sealed class MuxyHypelinePollingEditor : Editor
 {
     public override void OnInspectorGUI()

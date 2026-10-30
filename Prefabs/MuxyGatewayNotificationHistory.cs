@@ -28,12 +28,12 @@ public class MuxyGatewayNotificationHistory : MonoBehaviour
     private GameObject Canvas;
     private float ClearTimer = 8;
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         GatewayManager.OnAnyGameActionUsed.AddListener(OnGameActionUsed);
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         GatewayManager.OnAnyGameActionUsed.RemoveListener(OnGameActionUsed);
     }
@@ -77,13 +77,13 @@ public class MuxyGatewayNotificationHistory : MonoBehaviour
         AddToHistory(Text, Col);
     }
 
-    void Start()
+    protected void Start()
     {
         Elements = this.transform.Find("Canvas/Notifications/Elements").gameObject;
         Canvas = this.transform.Find("Canvas").gameObject;
     }
 
-    void Update()
+    protected void Update()
     {
         ClearTimer -= Time.deltaTime;
         if (ClearTimer <= 0)

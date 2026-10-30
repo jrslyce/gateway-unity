@@ -37,7 +37,8 @@ namespace MuxyGateway
 
         private Thread WriteThread;
         private Thread ReadThread;
-        private bool Done = false;
+        private volatile bool Done = false;
+        private readonly object LifecycleLock = new object();
 
         private Uri TargetUri;
 
@@ -124,9 +125,9 @@ namespace MuxyGateway
                 {
                     await Websocket.ConnectAsync(TargetUri, src.Token).ConfigureAwait(false);
                 }
-                connectionState = GatewayTransportState.Connected;
+                if (!Done) connectionState = GatewayTransportState.Connected;
             }
-            catch { connectionState = GatewayTransportState.Error; throw; }
+            catch { if (!Done) connectionState = GatewayTransportState.Error; throw; }
         }
 
         private async Task OpenAndRunInStage(SDK instance, Stage stage)
@@ -150,7 +151,8 @@ namespace MuxyGateway
                     }
             }
 
-            Run(instance);
+            // A reset can stop this transport while ConnectAsync is still pending.
+            lock (LifecycleLock) { if (!Done) Run(instance); }
         }
 
         public Task OpenAndRunInSandbox(MuxyGateway.SDK instance)
@@ -236,13 +238,21 @@ namespace MuxyGateway
         /// </summary>
         public async Task StopAsync()
         {
-            Done = true;
-            connectionState = GatewayTransportState.Disconnected;
+            lock (LifecycleLock)
+            {
+                Done = true;
+                connectionState = GatewayTransportState.Disconnected;
+            }
             UnboundedCancellationSource.Cancel();
 
             try
             {
-                if (Websocket.State != WebSocketState.Closed && Websocket.State != WebSocketState.Aborted)
+                WebSocketState state = Websocket.State;
+                if (state == WebSocketState.Connecting)
+                {
+                    Websocket.Abort();
+                }
+                else if (state == WebSocketState.Open || state == WebSocketState.CloseReceived)
                 {
                     using (CancellationTokenSource src = TokenSource())
                     {
