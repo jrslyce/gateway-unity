@@ -9,7 +9,7 @@ using MuxyGateway;
 public class MuxyHypelineMenu : MonoBehaviour
 {
     [InspectorName("Hypeline Manager")]
-    public MuxyGatewayManager GatewayManager;
+    public MuxyHypelineManager GatewayManager;
     public Texture2D FoxArtwork;
     public Texture2D WordmarkArtwork;
     [TextArea] public string GameDescription = "Let your live audience interact with your game on Twitch and TikTok.";

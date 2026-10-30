@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MuxyGatewayManager), true)]
-public sealed class MuxyGatewayManagerEditor : Editor
+[CustomEditor(typeof(MuxyHypelineManager), true)]
+public sealed class MuxyHypelineManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {

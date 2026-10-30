@@ -46,7 +46,7 @@ public static class GatewayCompatibilityPlayerValidation
         try
         {
             report.publicTypes = true;
-            foreach (Type type in new[] { typeof(SDK), typeof(GameMetadata), typeof(MuxyGatewayManager), typeof(MuxyGatewayAuthentication), typeof(MuxyGatewayPolling), typeof(MuxyGatewayNotificationHistory) })
+            foreach (Type type in new[] { typeof(SDK), typeof(GameMetadata), typeof(MuxyHypelineManager), typeof(MuxyHypelineLegacyAuthenticationUI), typeof(MuxyHypelinePolling), typeof(MuxyHypelineLegacyNotifications) })
                 report.publicTypes &= type.Assembly.GetName().Name == "Muxy.Gateway";
             var metadata = new MGW_GameMetadata { GameName = Text, GameLogo = "", Theme = "" };
             IntPtr memory = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MGW_GameMetadata)));

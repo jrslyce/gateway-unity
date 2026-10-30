@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MuxyHypelineInteractionAlert : MonoBehaviour
 {
     [InspectorName("Hypeline Manager")]
-    public MuxyGatewayManager GatewayManager;
+    public MuxyHypelineManager GatewayManager;
     [Tooltip("Optional Muxy logo displayed beside each alert.")]
     public Texture2D WordmarkArtwork;
     [Tooltip("Offset from the upper-right corner, in reference-resolution pixels.")]

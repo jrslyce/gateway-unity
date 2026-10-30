@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MuxyGatewayPolling), true)]
+[CustomEditor(typeof(MuxyHypelinePolling), true)]
 public sealed class MuxyHypelinePollingEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -10,7 +10,7 @@ public sealed class MuxyHypelinePollingEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Test Poll", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox("Preview a favorite-color poll with simulated votes. This stays local and does not start a live poll or send votes.", MessageType.Info);
-        var poll = target as MuxyGatewayPolling;
+        var poll = target as MuxyHypelinePolling;
         bool canTest = EditorApplication.isPlaying && poll != null && poll.isActiveAndEnabled && !EditorUtility.IsPersistent(poll);
         if (!canTest) EditorGUILayout.HelpBox("Enter Play mode and select an active polling instance in the scene.", MessageType.None);
         using (new EditorGUI.DisabledScope(!canTest))
