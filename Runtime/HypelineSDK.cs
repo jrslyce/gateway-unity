@@ -775,7 +775,8 @@ namespace MuxyHypeline
                 Used.Username = Value.Username;
 
                 MuxyHypelineGameActionUsedEvent Callback;
-                if (GameActionCallbacks.TryGetValue(Used.ActionID, out Callback))
+                if (GameActionCallbacks != null &&
+                    GameActionCallbacks.TryGetValue(Used.ActionID, out Callback) && Callback != null)
                 {
                     Callback.Invoke(Used);
                 }
