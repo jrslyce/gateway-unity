@@ -290,8 +290,8 @@ public class MuxyHypelineMenu : MonoBehaviour
         menuButton = menu.gameObject.AddComponent<Button>(); menuButton.targetGraphic = menu; menuButton.onClick.AddListener(OpenPanel);
         fox = Box("Fox status", menu.transform, center, center, new Vector2(-112, 0), new Vector2(48, 48), DisconnectedColor);
         fox.sprite = MakeSprite(FoxArtwork); fox.preserveAspect = true; fox.raycastTarget = false;
-        Text("Title", menu.transform, "Stream Interactivity", new Vector2(20, 13), new Vector2(224, 27), 21, TextAnchor.MiddleLeft).color = teal;
-        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(20, -14), new Vector2(224, 22), 16, TextAnchor.MiddleLeft);
+        Text("Title", menu.transform, "Stream Interactivity", new Vector2(30, 13), new Vector2(204, 27), 21, TextAnchor.MiddleLeft).color = teal;
+        menuStatus = Text("Status", menu.transform, "Not connected", new Vector2(30, -14), new Vector2(204, 22), 16, TextAnchor.MiddleLeft);
 
         modal = Box("Hypeline Panel", transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0, 0, 0, .72f)).gameObject;
         // Keep the modal above game sprites even when the parent canvas uses a low sorting order.
