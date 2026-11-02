@@ -1,4 +1,6 @@
 [Unreleased]
+- Make the in-game viewer-action alert a required setup, local preview, live-action checkpoint, and gameplay-adaptation requirement in steps 1–7 of the getting-started guide.
+- Include a six-second viewer/action notification in the C# integration sample using the existing fulfilled healthpack handler.
 - Present the Unity package as Muxy Hypeline and add `MuxyHypeline.SDK` as a compatible entry point to the existing Gateway SDK.
 - Retain the package ID, assembly, existing public API and prefab GUIDs, saved-token key, and backend connection identifiers for existing integrations.
 - Preserve reflection-loaded Mono TLS configuration types in stripped player builds through an Editor-only linker callback.
